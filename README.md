@@ -6,11 +6,10 @@ HopeBox is an iOS app that focuses on the tracking and improvement of mental hea
 
 
 ### Tools  
-- IDE 
-Xcode 
-#### Languages: 
-- Swift for frontend 
-- Python for backend 
+- IDE: Xcode 
+- Languages: 
+  - Swift for frontend 
+  - Python for backend 
 
 
 ### Learning Resources 
