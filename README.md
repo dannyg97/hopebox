@@ -5,12 +5,13 @@ A mood tracker app that shows healthy alternatives to negative emotions.
 HopeBox is an iOS app that focuses on the tracking and improvement of mental health. 
 
 
-### Technology Sets 
-##### IDE 
+### Tools  
+- IDE 
 Xcode 
-##### Languages: 
+#### Languages: 
 - Swift for frontend 
 - Python for backend 
+
 
 ### Learning Resources 
 Start Developing iOS Apps(Swift)
