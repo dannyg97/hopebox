@@ -9,7 +9,8 @@ HopeBox is an iOS app that focuses on the tracking and improvement of mental hea
 
 
 ### Backend 
-
+We will pick **Firebase** as our backend container to support our frontend. 
+https://firebase.google.com/
 
 ### Tools  
 - IDE: Xcode 
