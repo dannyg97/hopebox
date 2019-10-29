@@ -71,7 +71,65 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: Center(
+      body:
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          IconButton(
+            icon: Icon(Icons.sentiment_very_dissatisfied),
+            onPressed: () {
+              print('The value of the counter is  $_counter');
+              setState(() {
+                _counter++;
+              });
+
+            },
+            tooltip: 'Increase volume by 1',
+
+          ),
+          IconButton(
+            icon: Icon(Icons.sentiment_dissatisfied),
+            onPressed: () {
+              print('The value of the counter is  $_counter');
+              setState(() {
+                _counter+=2;
+              });
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.sentiment_neutral),
+            onPressed: () {
+              print('The value of the counter is  $_counter');
+              setState(() {
+                _counter+=3;
+              });
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.sentiment_satisfied),
+            onPressed: () {
+              print('The value of the counter is  $_counter');
+              setState(() {
+                _counter+=4;
+              });
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.sentiment_very_satisfied),
+            onPressed: () {
+
+              setState(() {
+                print('The value of the counter is  $_counter');
+
+                _counter+=5;
+              });
+            },
+          ),
+        ],
+      ),
+
+      /*Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
         child: Column(
@@ -100,7 +158,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ],
         ),
-      ),
+      ),*/
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: 'Increment',
