@@ -2,7 +2,7 @@
 # This is a generated file; do not edit or check into version control.
 export "FLUTTER_ROOT=/Users/kavehfaghani/Developer/flutter"
 export "FLUTTER_APPLICATION_PATH=/Users/kavehfaghani/Uni/project/hopebox"
-export "FLUTTER_TARGET=/Users/kavehfaghani/Uni/project/hopebox/lib/main.dart"
+export "FLUTTER_TARGET=/Users/kavehfaghani/Uni/project/hopebox/lib/mood_entry.dart"
 export "FLUTTER_BUILD_DIR=build"
 export "SYMROOT=${SOURCE_ROOT}/../build/ios"
 export "FLUTTER_FRAMEWORK_DIR=/Users/kavehfaghani/Developer/flutter/bin/cache/artifacts/engine/ios"

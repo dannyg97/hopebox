@@ -18,9 +18,9 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.amber,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(title: 'Mood Entry'),
     );
   }
 }
@@ -78,6 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
         children: <Widget>[
           IconButton(
             icon: Icon(Icons.sentiment_very_dissatisfied),
+            color: Colors.red,
             onPressed: () {
               print('The value of the counter is  $_counter');
               setState(() {
@@ -94,6 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           IconButton(
             icon: Icon(Icons.sentiment_dissatisfied),
+            color: Colors.orange,
             onPressed: () {
               print('The value of the counter is  $_counter');
               setState(() {
@@ -103,6 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           IconButton(
             icon: Icon(Icons.sentiment_neutral),
+            color: Colors.amber,
             onPressed: () {
               print('The value of the counter is  $_counter');
               setState(() {
@@ -112,6 +115,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           IconButton(
             icon: Icon(Icons.sentiment_satisfied),
+            color: Colors.greenAccent,
             onPressed: () {
               print('The value of the counter is  $_counter');
               setState(() {
@@ -121,8 +125,8 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           IconButton(
             icon: Icon(Icons.sentiment_very_satisfied),
+            color: Colors.green,
             onPressed: () {
-
               setState(() {
                 print('The value of the counter is  $_counter');
 
@@ -194,5 +198,3 @@ class SecondRoute extends StatelessWidget {
     );
   }
 }
-
-
