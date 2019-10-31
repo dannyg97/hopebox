@@ -6,10 +6,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(JournalEntry());
 
 /// This Widget is the main application widget.
-class MyApp extends StatelessWidget {
+class JournalEntry extends StatelessWidget {
   static const String _title = 'What\'s on your mind?';
 
   @override
