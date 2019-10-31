@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter/cupertino.dart';
 import './mood_entry.dart';
+import './mood_entry1.dart';
+
 import './journal_entry.dart';
 import 'package:my_app/journal_entry.dart';
 
@@ -92,9 +94,10 @@ class LandingPage extends StatelessWidget {
                         left: 20.0, right: 20.0, top: 10.0),
                     child: GestureDetector(
                       onTap: () {
-                        Navigator.push(context, MaterialPageRoute(
-                          builder: (context) => MoodEntry(),
-                        ));
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => MoodEnter()),
+                        );
                       },
                       child: new Container(
                           alignment: Alignment.center,
