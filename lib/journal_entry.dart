@@ -5,7 +5,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
+//import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 
 void main() => runApp(JournalEntry());
@@ -59,6 +59,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             title: const Text("What's on your mind?"),
             backgroundColor: const Color(0xFFFADA5E),
             leading: new IconButton(icon: new Icon(Icons.arrow_back)),
+
             actions: [new IconButton(icon: new Icon(Icons.done),
                 onPressed: () {
                   var input = myController.text;
@@ -133,10 +134,10 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 //}
 
 _save(var input) async {
-  final directory = await getApplicationDocumentsDirectory();
-  final file = File('${directory.path}/my_file.txt');
-  final text = input;
-  await file.writeAsString(text);
-  print(directory);
+  //final directory = await getApplicationDocumentsDirectory();
+  //final file = File('${directory.path}/my_file.txt');
+  //final text = input;
+ // await file.writeAsString(text);
+ // print(directory);
   print('File has been saved');
 }

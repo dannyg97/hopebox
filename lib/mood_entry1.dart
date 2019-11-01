@@ -46,6 +46,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   final _formKey = GlobalKey<FormState>();
 
   int _counter = 0;
+ // var string[10];
 
   void _incrementCounter() {
     setState(() {
