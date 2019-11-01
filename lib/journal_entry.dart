@@ -137,7 +137,9 @@ _save(var input) async {
   //final directory = await getApplicationDocumentsDirectory();
   //final file = File('${directory.path}/my_file.txt');
   //final text = input;
- // await file.writeAsString(text);
- // print(directory);
-  print('File has been saved');
+  //await file.writeAsString(text);
+  //print(directory);
+  //print('File has been saved');
 }
+
+
