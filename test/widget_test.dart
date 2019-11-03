@@ -7,24 +7,37 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:hopebox/main.dart';
+import 'package:hope_box/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
+  testWidgets('Entering a text into text field changes the field', (WidgetTester tester) async {
     // Build our app and trigger a frame.
     await tester.pumpWidget(MyApp());
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    // Verify that our text field contains nothing at the beginning
+    expect(find.text('Hello'), findsNothing);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    // Verify that the text field changes after text is added
+    await tester.enterText(find.byType(TextField), 'Hello');
+    expect(find.text('Hello'), findsOneWidget);
+  });
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+  testWidgets('Entering special characters and combinations of different character types works as intended', (WidgetTester tester) async {
+    await tester.pumpWidget(MyApp());
+
+    await tester.enterText(find.byType(TextField), '#3LL0 W0®LD!?!');
+    expect(find.text('#3LL0 W0®LD!?!'), findsOneWidget);
+  });
+
+  testWidgets('Tapping the "Done" icon resets the text field', (WidgetTester tester) async {
+    await tester.pumpWidget(MyApp());
+    await tester.enterText(find.byType(TextField), 'Some text');
+    expect(find.text('Some text'), findsOneWidget);
+
+    // Verify that after tapping the "Done" icon, it resets the textbox
+    await tester.tap(find.byIcon(Icons.done));
+    // Shows up with pop-up, so tap again on screen to remove it
+    await tester.tap(find.byIcon(Icons.done));
+    expect(find.text('Some text'), findsNothing);
   });
 }
