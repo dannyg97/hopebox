@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
+import './landing_page.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  runApp(new MaterialApp(
+    home: new LandingPage(),
+  ));
+}
+
+/*void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -18,9 +25,9 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.amber,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(title: 'Mood Entry'),
     );
   }
 }
@@ -71,7 +78,73 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: Center(
+      body:
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          IconButton(
+            icon: Icon(Icons.sentiment_very_dissatisfied),
+            color: Colors.red,
+            onPressed: () {
+              print('The value of the counter is  $_counter');
+              setState(() {
+                _counter++;
+              });
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SecondRoute()),
+              );
+
+            },
+            tooltip: 'Increase volume by 1',
+
+          ),
+          IconButton(
+            icon: Icon(Icons.sentiment_dissatisfied),
+            color: Colors.orange,
+            onPressed: () {
+              print('The value of the counter is  $_counter');
+              setState(() {
+                _counter+=2;
+              });
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.sentiment_neutral),
+            color: Colors.amber,
+            onPressed: () {
+              print('The value of the counter is  $_counter');
+              setState(() {
+                _counter+=3;
+              });
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.sentiment_satisfied),
+            color: Colors.greenAccent,
+            onPressed: () {
+              print('The value of the counter is  $_counter');
+              setState(() {
+                _counter+=4;
+              });
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.sentiment_very_satisfied),
+            color: Colors.green,
+            onPressed: () {
+              setState(() {
+                print('The value of the counter is  $_counter');
+
+                _counter+=5;
+              });
+            },
+          ),
+        ],
+      ),
+
+      /*Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
         child: Column(
@@ -100,7 +173,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ],
         ),
-      ),
+      ),*/
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: 'Increment',
@@ -109,3 +182,26 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
+
+class SecondRoute extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('First Route'),
+      ),
+      body: Center(
+        child: RaisedButton(
+          child: Text('Open route'),
+          onPressed: () {
+            // Navigate to second route when tapped.
+            Navigator.pop(context);
+
+
+          },
+        ),
+      ),
+    );
+  }
+}*/
