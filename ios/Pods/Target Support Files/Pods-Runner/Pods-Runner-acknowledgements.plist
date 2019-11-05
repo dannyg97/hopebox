@@ -14,6 +14,7 @@
 		</dict>
 		<dict>
 			<key>FooterText</key>
+<<<<<<< HEAD
 			<string>
                                  Apache License
                            Version 2.0, January 2004
@@ -1720,6 +1721,8 @@
 		</dict>
 		<dict>
 			<key>FooterText</key>
+=======
+>>>>>>> mood_entry
 			<string>Copyright 2014 The Chromium Authors. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification,
@@ -1755,6 +1758,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 		</dict>
 		<dict>
 			<key>FooterText</key>
+<<<<<<< HEAD
 			<string>
                                  Apache License
                            Version 2.0, January 2004
@@ -2717,10 +2721,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 			<key>FooterText</key>
 			<string>Copyright (c) 2011 The LevelDB Authors. All rights reserved.
 
+=======
+			<string>Copyright 2017, the Flutter project authors. All rights reserved.
+>>>>>>> mood_entry
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
 
+<<<<<<< HEAD
    * Redistributions of source code must retain the above copyright
 notice, this list of conditions and the following disclaimer.
    * Redistributions in binary form must reproduce the above
@@ -2730,6 +2738,17 @@ distribution.
    * Neither the name of Google Inc. nor the names of its
 contributors may be used to endorse or promote products derived from
 this software without specific prior written permission.
+=======
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above
+      copyright notice, this list of conditions and the following
+      disclaimer in the documentation and/or other materials provided
+      with the distribution.
+    * Neither the name of Google Inc. nor the names of its
+      contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
+>>>>>>> mood_entry
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -2741,6 +2760,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
 DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
 THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+<<<<<<< HEAD
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </string>
 			<key>License</key>
@@ -2777,6 +2797,11 @@ redistribute it freely, subject to the following restrictions:
 			<string>zlib</string>
 			<key>Title</key>
 			<string>nanopb</string>
+=======
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</string>
+			<key>Title</key>
+			<string>path_provider</string>
+>>>>>>> mood_entry
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 		</dict>

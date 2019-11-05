@@ -20,6 +20,14 @@ dependencies:
   flutter:
     sdk: flutter
   http: ^0.12.0
+<<<<<<< HEAD
+=======
+  path_provider: ^0.4.1
+  timer_builder: ^1.3.0
+
+
+
+>>>>>>> mood_entry
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2

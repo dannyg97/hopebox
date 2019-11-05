@@ -1,12 +1,23 @@
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
 import 'authentication.dart';
 import 'root_page.dart';
+=======
+import './landing_page.dart';
+>>>>>>> mood_entry
 
-void main() => runApp(MyApp());
+void main() {
+  runApp(new MaterialApp(
+    home: new LandingPage(),
+  ));
+}
+
+/*void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
     return new MaterialApp(
         title: 'HopeBox Login',
         debugShowCheckedModeBanner: false,
@@ -14,6 +25,24 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
         ),
         home: new RootPage(auth: new Auth()));
+=======
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        // This is the theme of your application.
+        //
+        // Try running your application with "flutter run". You'll see the
+        // application has a blue toolbar. Then, without quitting the app, try
+        // changing the primarySwatch below to Colors.green and then invoke
+        // "hot reload" (press "r" in the console where you ran "flutter run",
+        // or simply save your changes to "hot reload" in a Flutter IDE).
+        // Notice that the counter didn't reset back to zero; the application
+        // is not restarted.
+        primarySwatch: Colors.amber,
+      ),
+      home: MyHomePage(title: 'Mood Entry'),
+    );
+>>>>>>> mood_entry
   }
 }
 
@@ -63,7 +92,73 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: Center(
+      body:
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          IconButton(
+            icon: Icon(Icons.sentiment_very_dissatisfied),
+            color: Colors.red,
+            onPressed: () {
+              print('The value of the counter is  $_counter');
+              setState(() {
+                _counter++;
+              });
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SecondRoute()),
+              );
+
+            },
+            tooltip: 'Increase volume by 1',
+
+          ),
+          IconButton(
+            icon: Icon(Icons.sentiment_dissatisfied),
+            color: Colors.orange,
+            onPressed: () {
+              print('The value of the counter is  $_counter');
+              setState(() {
+                _counter+=2;
+              });
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.sentiment_neutral),
+            color: Colors.amber,
+            onPressed: () {
+              print('The value of the counter is  $_counter');
+              setState(() {
+                _counter+=3;
+              });
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.sentiment_satisfied),
+            color: Colors.greenAccent,
+            onPressed: () {
+              print('The value of the counter is  $_counter');
+              setState(() {
+                _counter+=4;
+              });
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.sentiment_very_satisfied),
+            color: Colors.green,
+            onPressed: () {
+              setState(() {
+                print('The value of the counter is  $_counter');
+
+                _counter+=5;
+              });
+            },
+          ),
+        ],
+      ),
+
+      /*Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
         child: Column(
@@ -92,7 +187,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ],
         ),
-      ),
+      ),*/
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: 'Increment',
@@ -101,3 +196,26 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
+
+class SecondRoute extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('First Route'),
+      ),
+      body: Center(
+        child: RaisedButton(
+          child: Text('Open route'),
+          onPressed: () {
+            // Navigate to second route when tapped.
+            Navigator.pop(context);
+
+
+          },
+        ),
+      ),
+    );
+  }
+}*/

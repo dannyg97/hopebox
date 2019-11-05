@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:my_app/sentiment_analysis_helper.dart';
+import 'package:my_app/mood_entry.dart';
 import 'package:http/http.dart' as http;
 import 'package:mockito/mockito.dart';
 import 'package:matcher/matcher.dart';

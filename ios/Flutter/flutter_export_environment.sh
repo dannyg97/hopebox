@@ -1,11 +1,20 @@
 #!/bin/sh
 # This is a generated file; do not edit or check into version control.
+<<<<<<< HEAD
 export "FLUTTER_ROOT=/Users/kfengc27/Developer/flutter"
 export "FLUTTER_APPLICATION_PATH=/Users/kfengc27/Developer/hopebox"
 export "FLUTTER_TARGET=/Users/kfengc27/Developer/hopebox/lib/main.dart"
 export "FLUTTER_BUILD_DIR=build"
 export "SYMROOT=${SOURCE_ROOT}/../build/ios"
 export "FLUTTER_FRAMEWORK_DIR=/Users/kfengc27/Developer/flutter/bin/cache/artifacts/engine/ios"
+=======
+export "FLUTTER_ROOT=/Users/kavehfaghani/Developer/flutter"
+export "FLUTTER_APPLICATION_PATH=/Users/kavehfaghani/Uni/project/hopebox"
+export "FLUTTER_TARGET=/Users/kavehfaghani/Uni/project/hopebox/lib/main.dart"
+export "FLUTTER_BUILD_DIR=build"
+export "SYMROOT=${SOURCE_ROOT}/../build/ios"
+export "FLUTTER_FRAMEWORK_DIR=/Users/kavehfaghani/Developer/flutter/bin/cache/artifacts/engine/ios"
+>>>>>>> mood_entry
 export "FLUTTER_BUILD_NAME=1.0.0"
 export "FLUTTER_BUILD_NUMBER=1"
 export "TRACK_WIDGET_CREATION=true"
