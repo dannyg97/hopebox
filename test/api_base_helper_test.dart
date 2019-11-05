@@ -17,8 +17,7 @@ void main() {
     String body = '{"documents": [{"id": "1","score": 0.993499755859375}], "errors": []}';
     String validResponseBody = '{"documents": [{"id": "1","score": 0.993499755859375}],"errors": []}';
     String validResponseBodyWithError = '{"documents": [],"errors": [{"message":"Oops something went wrong."}]}';
-
-
+    
     group('post', () {
         var mockHttpClient = MockHttpClient();
         ApiBaseHelper apiBaseHelper = new ApiBaseHelper(mockHttpClient);

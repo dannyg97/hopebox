@@ -4,10 +4,8 @@ import 'authentication.dart';
 
 class LoginSignupPage extends StatefulWidget {
   LoginSignupPage({this.auth, this.loginCallback});
-
   final BaseAuth auth;
   final VoidCallback loginCallback;
-
   @override
   State<StatefulWidget> createState() => new _LoginSignupPageState();
 }
@@ -156,18 +154,14 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
         padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 0.0),
         child: Center(
           child: new Text(
-  
           // child: Image.asset('assets/hopebox.png'),
             logoString,
             style: TextStyle(
               fontSize: 40.0, 
               decorationColor: Colors.blue,
-              
               height: 2),
-
         ),
         )
-        
       ),
     );
   }
@@ -232,6 +226,6 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
                 style: new TextStyle(fontSize: 20.0, color: Colors.white)),
             onPressed: validateAndSubmit,
           ),
-        ));
+    ));
   }
 }

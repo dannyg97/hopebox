@@ -1,0 +1,25 @@
+{
+	"folders": [
+		{
+			"path": "android"
+		},
+		{
+			"path": "assets"
+		},
+		{
+			"path": "build"
+		},
+		{
+			"path": "hopebox"
+		},
+		{
+			"path": "ios"
+		},
+		{
+			"path": "lib"
+		},
+		{
+			"path": "test"
+		}
+	]
+}

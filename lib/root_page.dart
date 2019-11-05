@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/mood_entry1.dart';
 import 'authentication.dart';
 import 'home_page.dart';
 import 'login_signup_pages.dart';
@@ -82,6 +83,11 @@ class _RootPageState extends State<RootPage> {
             auth: widget.auth,
             logoutCallback: logoutCallback,
           );
+          // return new MoodEnter(
+          //   userId: _userId,
+          //   auth: widget.auth,
+          //   logoutCallback: logoutCallback,
+          // );
         } else
           return buildWaitingScreen();
         break;

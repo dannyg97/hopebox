@@ -3,6 +3,11 @@ import 'authentication.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'todo.dart';
 import 'dart:async';
+import './account/information.dart';
+import './mood_entry1.dart';
+import './journal_entry.dart';
+import './history/history.dart';
+import './analysis/analysis.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.auth, this.userId, this.logoutCallback})
@@ -175,12 +180,53 @@ class _HomePageState extends State<HomePage> {
             );
           });
     } else {
-      return Center(
-          child: Text(
-        "Welcome! Le",
-        textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 30.0),
-      ));
+      return MoodEnter(
+        userId: widget.userId, 
+        auth: this.widget.auth,
+        logoutCallback: widget.logoutCallback
+      ); 
+    }
+  }
+
+int _selectedIndex = 0;
+static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.black);
+  static const List<Widget> _widgetOptions = <Widget>[
+  Text(
+    'Index 0: Home',
+    style: optionStyle,
+  ),
+  Text(
+     'Index 1: Business',
+     style: optionStyle,
+  ),
+  Text(
+     'Index 2: School',
+     style: optionStyle,
+  ),
+  Text(
+    "Index 3:",
+    style: optionStyle
+  )
+];
+
+  void _onItemTapped(int index) {
+  setState(() {
+    _selectedIndex = index;
+  });
+  }
+
+  _getPageWidget(int pos){
+    switch (pos) {
+      case 0:
+        return showTodoList();
+      case 1:
+        return new HistoryPage(); 
+      case 2: 
+        return new AnalysisPage(auth: widget.auth, userId: widget.userId, logoutCallback: widget.logoutCallback); 
+      case 3:
+        return new AccountPage();
+        break;
+      default:
     }
   }
 
@@ -188,7 +234,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return new Scaffold(
         appBar: new AppBar(
-          title: new Text('HopeBox Login'),
+          title: new Text("HopeBox"),
           actions: <Widget>[
             new FlatButton(
                 child: new Text('Logout',
@@ -196,13 +242,41 @@ class _HomePageState extends State<HomePage> {
                 onPressed: signOut)
           ],
         ),
-        body: showTodoList(),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            showAddTodoDialog(context);
-          },
-          tooltip: 'Increment',
-          child: Icon(Icons.add),
+        body: _getPageWidget(_selectedIndex),
+ 
+       
+        bottomNavigationBar: BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              title: Text('Home'),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.history),
+              title: Text("History")
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.equalizer),
+              title: Text("Analysis")
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.account_box, ),
+              title: Text("Me")
+            )
+          ],
+          currentIndex: _selectedIndex,
+          unselectedItemColor: Colors.black,
+          selectedItemColor: Colors.blue,
+          onTap: _onItemTapped,
         ));
+        // floatingActionButton: FloatingActionButton(
+        //   onPressed: () {
+        //     showAddTodoDialog(context);
+        //   },
+        //   tooltip: 'Increment',
+        //   child: Icon(Icons.add),
+        // ));
   }
+
+  
 }
