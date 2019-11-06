@@ -6,12 +6,9 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:my_app/authentication.dart';
+import 'package:my_app/registration/authentication.dart';
 //import 'package:path_provider/path_provider.dart';
-import 'dart:io';
-import "journal.dart";
-
-import 'package:my_app/home_page.dart';
+import "datasets/journal.dart";
 
 // void main() => runApp(JournalEntry());
 

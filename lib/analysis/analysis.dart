@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../authentication.dart';
+import '../registration/authentication.dart';
 
 class AnalysisPage extends StatelessWidget {
   AnalysisPage({Key key, this.auth, this.userId, this.logoutCallback})
@@ -7,14 +7,13 @@ class AnalysisPage extends StatelessWidget {
   final BaseAuth auth;
   final VoidCallback logoutCallback;
   final String userId;
-  
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(color: Colors.white),
       child: Center(
         child: Text(
-          'Analysis $this._auth',
+          'Analysis $userId',
           textDirection: TextDirection.ltr,
           style: TextStyle(
             fontSize: 32,
