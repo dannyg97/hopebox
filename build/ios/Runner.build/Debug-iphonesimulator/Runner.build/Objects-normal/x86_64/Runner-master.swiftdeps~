@@ -1,0 +1,5 @@
+version: "Apple Swift version 5.1 (swiftlang-1100.0.270.13 clang-1100.0.33.7)"
+options: "13a3c499d93d7ddbb8f677b6c6af1121"
+build_time: [1572905916, 386147000]
+inputs:
+  "/Users/kfengc27/Developer/hopebox/ios/Runner/AppDelegate.swift": [1572758145, 952049893]
