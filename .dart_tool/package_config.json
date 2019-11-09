@@ -38,6 +38,18 @@
       "languageVersion": "1.0"
     },
     {
+      "name": "charts_common",
+      "rootUri": "file:///Users/kfengc27/Developer/flutter/.pub-cache/hosted/pub.dartlang.org/charts_common-0.8.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.1"
+    },
+    {
+      "name": "charts_flutter",
+      "rootUri": "file:///Users/kfengc27/Developer/flutter/.pub-cache/hosted/pub.dartlang.org/charts_flutter-0.8.1",
+      "packageUri": "lib/",
+      "languageVersion": "1.23"
+    },
+    {
       "name": "collection",
       "rootUri": "file:///Users/kfengc27/Developer/flutter/.pub-cache/hosted/pub.dartlang.org/collection-1.14.11",
       "packageUri": "lib/",
@@ -168,6 +180,12 @@
       "rootUri": "file:///Users/kfengc27/Developer/flutter/.pub-cache/hosted/pub.dartlang.org/kernel-0.3.19",
       "packageUri": "lib/",
       "languageVersion": "2.0"
+    },
+    {
+      "name": "logging",
+      "rootUri": "file:///Users/kfengc27/Developer/flutter/.pub-cache/hosted/pub.dartlang.org/logging-0.11.3+2",
+      "packageUri": "lib/",
+      "languageVersion": "1.5"
     },
     {
       "name": "matcher",
@@ -404,7 +422,7 @@
       "languageVersion": "2.2"
     }
   ],
-  "generated": "2019-11-05T21:36:23.417908Z",
+  "generated": "2019-11-07T20:21:32.614603Z",
   "generator": "pub",
   "generatorVersion": "2.6.0-dev.8.2.flutter-bbe2ac28c9"
 }

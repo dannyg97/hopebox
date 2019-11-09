@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import './mood_entry1.dart';
+import './mood_entry.dart';
 import './journal_entry.dart';
 import 'package:my_app/journal_entry.dart';
 

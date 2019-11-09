@@ -24,23 +24,11 @@ class MoodEnter extends StatelessWidget {
     return MaterialApp(
       title: _title,
       home: Scaffold(
-        
-        // appBar: new AppBar(
-        //     // title: const Text(_title),
-        //     backgroundColor: const Color(0xFF18D191),
-        //     actions: [new IconButton(icon: new Icon(Icons.arrow_back),
-        //         onPressed: () {
-        //           // Navigate to second route when tapped.
-        //           Navigator.pop(context);
-        //         })
-        //     ]
-        // ),
         body: MyStatefulWidget(
           auth: this.auth,
           userId: this.userId,
           logoutCallback: this.logoutCallback,
         ),
-        
       ),
     );
   }
