@@ -1,0 +1,8 @@
+.packages
+.flutter_plugins
+ios
+build
+flutter
+.DS_store
+android
+.idea
