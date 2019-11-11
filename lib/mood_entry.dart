@@ -3,13 +3,14 @@
 // This example shows a [Form] with one [TextFormField] and a [RaisedButton]. A
 // [GlobalKey] is used here to identify the [Form] and validate input.
 
+import 'package:my_app/fire_base_helper.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 // import 'package:timer_builder/timer_builder.dart';
 import 'registration/authentication.dart';
-import "datasets/mood.dart";
 import 'journal_entry.dart';
+import 'date_time_helper.dart';
 
 /// This Widget is the main application widget.
 class MoodEnter extends StatelessWidget {
@@ -49,13 +50,13 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   final _formKey = GlobalKey<FormState>();
   
   final FirebaseDatabase _database = FirebaseDatabase.instance;
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>(); 
+  final FireBaseHelper _fireBaseHelper = FireBaseHelper();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  Query _moodEntry; 
-
+  DateTimeHelper _dateTimeHelper = new DateTimeHelper();
 
   int _counter = 0;
-  int _emojiColour = 0;
+  int _emojiColour = -1;
  // var string[10];
 
   void _incrementCounter() {
@@ -67,29 +68,21 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
   @override
   void initState(){
-    super.initState(); 
-    _moodEntry = _database.reference().child('mood_entry').orderByChild('userId').equalTo(widget.userId);
+    super.initState();
+    initialiseMood();
   }
 
-  addNewMood(int moodtype){
-    print(moodtype);
-    var _userid = widget.userId;
-    Mood mood = new Mood(moodtype.toString(), widget.userId, true);
-    print("The mood type is and userid is $_userid");
-    _database.reference().child("mood_entry").push().set(mood.toJson());
+  void initialiseMood() {
+      _fireBaseHelper.getMood(widget.userId, _dateTimeHelper.getCurrDateTime()).then((mood){
+          setState(() {
+              _emojiColour = mood;
+          });
+      });
   }
 
-  updateMood(Mood mood){
-    mood.completed = !mood.completed;
-    if(mood!=null){
-      _database.reference().child('mood').child(mood.key).set(mood.toJson());
-    }
+  updateMood(int moodtype){
+    _fireBaseHelper.addMood(widget.userId, _dateTimeHelper.getCurrDateTime(), moodtype);
   }
-
-  deleteMood(String moodId, int index){
-    _database.reference().child('mood').child(moodId).remove();
-  }
-
 
   @override
   Widget build(BuildContext context) {
@@ -141,17 +134,6 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 )
               ],
             ),
-             new Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              
-              children: <Widget>[
-                Center(
-                  child: new Text(        
-                    "You are felling $_counter",
-                  )
-                )
-              ],
-            ),
             new Stack(
                 alignment: Alignment.center,
                 children: <Widget>[
@@ -162,15 +144,15 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                     child: new IconButton(
                           icon: new Icon(Icons.sentiment_very_dissatisfied,
                               size: 50,
-                              color: (_emojiColour == 1) ? Colors.red
+                              color: (_emojiColour == 0) ? Colors.red
                               : Colors.grey,
                     ),
                           onPressed: () {
                             setState(() {
-                              if(_emojiColour == 1 ){
-                              _emojiColour = 0;
+                              if(_emojiColour == 0 ){
+                              _emojiColour = -1;
                               } else {
-                              _emojiColour = 1;
+                              _emojiColour = 0;
                               _counter=0;
                               print("The value of the counter is  $_counter");
                               }
@@ -188,15 +170,15 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                           icon: new Icon(
                             Icons.sentiment_dissatisfied,
                               size: 50,
-                              color: (_emojiColour == 2) ? Colors.deepOrangeAccent
+                              color: (_emojiColour == 1) ? Colors.deepOrangeAccent
                               : Colors.grey,
                       ),
                           onPressed: () {
                             setState(() {
-                              if(_emojiColour == 2) {
-                                _emojiColour = 0;
+                              if(_emojiColour == 1) {
+                                _emojiColour = -1;
                               } else {
-                                _emojiColour = 2;
+                                _emojiColour = 1;
                                 _counter=1;
                                 
                               }
@@ -213,15 +195,15 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                           icon: new Icon(
                               Icons.sentiment_neutral,
                               size: 50,
-                              color: (_emojiColour == 3) ? Colors.amber
+                              color: (_emojiColour == 2) ? Colors.amber
                               : Colors.grey,
                       ),
                           onPressed: () {
                             setState(() {
-                              if(_emojiColour == 3) {
-                                _emojiColour = 0;
+                              if(_emojiColour == 2) {
+                                _emojiColour = -1;
                               } else {
-                                _emojiColour = 3;
+                                _emojiColour = 2;
                                 _counter=2;
                               }
                             });
@@ -235,15 +217,15 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                       margin: new EdgeInsets.only(left: 150.0, top: 0.0),
                       child: new IconButton(
                           icon: new Icon(Icons.sentiment_satisfied, size: 50,
-                            color: (_emojiColour == 4) ? Colors.greenAccent
+                            color: (_emojiColour == 3) ? Colors.greenAccent
                                 : Colors.grey,
                           ),
                           onPressed: () {
                             setState(() {
-                              if(_emojiColour == 4) {
-                                _emojiColour = 0;
+                              if(_emojiColour == 3) {
+                                _emojiColour = -1;
                               } else {
-                                _emojiColour = 4;
+                                _emojiColour = 3;
                                 _counter=3;
                               }                            });
                             print('The value of the counter is  $_counter');
@@ -256,16 +238,16 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                       margin: new EdgeInsets.only(left: 300.0, top: 0.0),
                       child: new IconButton(
                           icon: new Icon(Icons.sentiment_very_satisfied, size: 50,
-                              color: (_emojiColour == 5) ? Colors.green
+                              color: (_emojiColour == 4) ? Colors.green
                               : Colors.grey,
                       ),
                           onPressed: () {
 
                             setState(() {
-                              if(_emojiColour == 5) {
-                                _emojiColour = 0;
+                              if(_emojiColour == 4) {
+                                _emojiColour = -1;
                               } else {
-                                _emojiColour = 5;
+                                _emojiColour = 4;
                                 _counter=4;
                               }
                             });
@@ -282,12 +264,14 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                   child: RaisedButton(
                     child: new Icon(Icons.arrow_forward),
                     onPressed: (){
-                      addNewMood(_counter);
+                      updateMood(_counter);
                       print("The $_counter is entered");
                       Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => JournalEntry(auth: widget.auth, userId: widget.userId, logoutCallback: widget.logoutCallback)),
-            );
+                        context,
+                        MaterialPageRoute(builder: (context) => JournalEntry(auth: widget.auth, userId: widget.userId, logoutCallback: widget.logoutCallback)),
+                      ).then((value) {
+                          initialiseMood();
+                      });
                     },
                   ),
                 )

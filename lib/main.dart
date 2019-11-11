@@ -3,7 +3,6 @@ import 'registration/authentication.dart';
 import 'Start/root_page.dart';
 
 void main() => runApp(MyApp());
-
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
