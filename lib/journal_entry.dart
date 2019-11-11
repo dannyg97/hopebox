@@ -8,7 +8,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:my_app/registration/authentication.dart';
 //import 'package:path_provider/path_provider.dart';
-import "datasets/journal.dart";
+import 'date_time_helper.dart';
+import 'package:my_app/fire_base_helper.dart';
+import 'package:my_app/sentiment_analysis_helper.dart';
+import 'package:my_app/api_base_helper.dart';
+import 'package:http/http.dart';
 
 // void main() => runApp(JournalEntry());
 
@@ -27,11 +31,12 @@ import "datasets/journal.dart";
 class JournalEntry extends StatelessWidget {
   JournalEntry({Key key, this.auth, this.userId, this.logoutCallback})
       : super(key: key);
-  
+
   final BaseAuth auth;
-  final String userId; 
-  final VoidCallback logoutCallback; 
-  static const String _title = 'What\'s on your mind?';
+  final String userId;
+  final VoidCallback logoutCallback;
+  static const String _title = 'What\'s on your mind?';  final FireBaseHelper _fireBaseHelper = FireBaseHelper();
+
   bool debugShowCheckedModeBanner = false;
   @override
   Widget build(BuildContext context) {
@@ -55,8 +60,8 @@ class MyStatefulWidget extends StatefulWidget {
   MyStatefulWidget({Key key, this.auth, this.userId, this.logoutCallback})
       : super(key: key);
   final BaseAuth auth;
-  final String userId; 
-  final VoidCallback logoutCallback; 
+  final String userId;
+  final VoidCallback logoutCallback;
 
   @override
   _MyStatefulWidgetState createState() => _MyStatefulWidgetState();
@@ -65,16 +70,15 @@ class MyStatefulWidget extends StatefulWidget {
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 //  final _formKey = GlobalKey<FormState>();
   final myController = TextEditingController();
-  final FirebaseDatabase _database = FirebaseDatabase.instance; 
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>(); 
-  
-  Query _todoQuery; 
+  final FireBaseHelper _fireBaseHelper = FireBaseHelper();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  DateTimeHelper _dateTimeHelper = new DateTimeHelper();
+  SentimentAnalysisHelper _sentimentAnalysisHelper = SentimentAnalysisHelper(ApiBaseHelper(Client()));
+  Query _todoQuery;
 
-  @override 
+  @override
   void initState(){
-    super.initState(); 
-    _todoQuery = _database.reference().child('journal_entry')
-    .orderByChild('userId').equalTo(widget.userId);
+    super.initState();
   }
 
   @override
@@ -83,22 +87,14 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     super.dispose();
   }
 
-  addNewJournal(String journal){
-    if(journal.length>0){
-      Journal journalRecord = new Journal(journal.toString(), widget.userId, true);
-      _database.reference().child("journal_entry").push().set(journalRecord.toJson());
+  updateJournalEntry(String journal){
+    if(journal.length>0) {
+      _fireBaseHelper.addJournalEntry(widget.userId, _dateTimeHelper.getCurrDateTime(), journal.toString());
+      _sentimentAnalysisHelper.analyseTextSentiment(journal.toString()).then((score) {
+        print("score is $score");
+        _fireBaseHelper.addMood(widget.userId, _dateTimeHelper.getCurrDateTime(), score);
+      });
     }
-  }
-
-  updateJournal(Journal journal){
-    journal.completed = !journal.completed;
-    if(journal != null){
-      _database.reference().child('journal').child(journal.key).set(journal.toJson());
-    }
-  }
-
-  deleteJournal(String journalId, int index){
-    _database.reference().child('journal').child(journalId).remove();
   }
 
   @override
@@ -112,15 +108,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 onPressed: () {
                   var input = myController.text;
                   myController.clear();
-                  addNewJournal(input.toString());
-                  return showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                            content: Text(input)
-                        );
-                      }
-                  );
+                  updateJournalEntry(input.toString());
+                  Navigator.pop(context);
                 })
             ]
         ),
