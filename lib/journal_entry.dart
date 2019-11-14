@@ -35,7 +35,8 @@ class JournalEntry extends StatelessWidget {
   final BaseAuth auth;
   final String userId;
   final VoidCallback logoutCallback;
-  static const String _title = 'What\'s on your mind?';  final FireBaseHelper _fireBaseHelper = FireBaseHelper();
+  static const String _title = 'What\'s on your mind?';
+  final FireBaseHelper _fireBaseHelper = FireBaseHelper();
 
   bool debugShowCheckedModeBanner = false;
   @override
@@ -100,19 +101,6 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: new AppBar(
-            title: const Text("What's on your mind?"),
-            // backgroundColor: const Color(0xFFFADA5E),
-            // leading: new IconButton(icon: new Icon(Icons.arrow_back)),
-            actions: [new IconButton(icon: new Icon(Icons.done),
-                onPressed: () {
-                  var input = myController.text;
-                  myController.clear();
-                  updateJournalEntry(input.toString());
-                  Navigator.pop(context);
-                })
-            ]
-        ),
         body: Form(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -135,25 +123,21 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                   ),
                 ),
               ),
-              /*
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: RaisedButton(
-                    onPressed: () {
-                      // Validate will return true if the form is valid, or false if
-                      // the form is invalid.
-                      if (_formKey.currentState.validate()) {
-                        // Process data.
-                        print(_formKey.toString());
-                      }
-                    },
-                    child: Text('Submit'),
-                  ),
-                ),
-         */
             ],
           ),
-        ));
+        ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          var input = myController.text;
+          myController.clear();
+          updateJournalEntry(input.toString());
+          Navigator.pop(context);
+        },
+        label: Text('Submit'),
+        icon: Icon(Icons.thumb_up),
+        backgroundColor: Colors.lightGreen,
+      ),
+    );
   }
 }
 
