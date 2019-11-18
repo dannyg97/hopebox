@@ -127,7 +127,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                           height: 60.0,
                           decoration: new BoxDecoration(
                               color: Color(0xFF18D191)),
-                          child: new Text("How are you feeling ? ",
+                          child: new Text("How do you feel today?",
                               style: new TextStyle(
                                   fontSize: 20.0, color: Colors.white))),
                     ),

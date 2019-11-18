@@ -232,6 +232,15 @@ static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWei
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+        appBar: new AppBar(
+          title: new Text("HopeBox"),
+          actions: <Widget>[
+            new FlatButton(
+                child: new Text('Logout',
+                    style: new TextStyle(fontSize: 17.0, color: Colors.white)),
+                onPressed: signOut)
+          ],
+        ),
         body: _getPageWidget(_selectedIndex),
         bottomNavigationBar: BottomNavigationBar(
           items: const <BottomNavigationBarItem>[
