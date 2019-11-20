@@ -29,7 +29,7 @@ dependencies:
   cloud_firestore: ^0.12.10
   intl: ^0.16.0
   charts_flutter: ^0.8.1
-
+  fancy_bottom_navigation: ^0.3.2
 
 dev_dependencies:
   mockito: 3.0.0

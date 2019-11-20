@@ -7,6 +7,7 @@ import '../account/information.dart';
 import '../mood_entry.dart';
 import '../history/history.dart';
 import '../analysis/analysis.dart';
+import 'package:fancy_bottom_navigation/fancy_bottom_navigation.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.auth, this.userId, this.logoutCallback})
@@ -242,37 +243,26 @@ static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWei
           ],
         ),
         body: _getPageWidget(_selectedIndex),
-        bottomNavigationBar: BottomNavigationBar(
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              title: Text('Home'),
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.history),
-              title: Text("History")
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.equalizer),
-              title: Text("Analysis")
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.account_box, ),
-              title: Text("Settings")
-            )
+        bottomNavigationBar: FancyBottomNavigation(
+          tabs: [
+            TabData(iconData: Icons.home, title: "Home"),
+            TabData(iconData: Icons.calendar_today , title: "Calendar"),
+            TabData(iconData: Icons.equalizer, title: "Analysis"),
+            TabData(iconData: Icons.settings, title: "Settings")
           ],
-          currentIndex: _selectedIndex,
-          unselectedItemColor: Colors.black,
-          selectedItemColor: Colors.yellow,
-          onTap: _onItemTapped,
-        ));
-        // floatingActionButton: FloatingActionButton(
-        //   onPressed: () {
-        //     showAddTodoDialog(context);
-        //   },
-        //   tooltip: 'Increment',
-        //   child: Icon(Icons.add),
-        // ));
+          onTabChangedListener: (position) {
+            setState(() {
+              _selectedIndex = position;
+            });
+          },
+          circleColor: Color(0xffff2d55),
+          inactiveIconColor:  Color(0xffff2d55)
+//          currentIndex: _selectedIndex,
+//          unselectedItemColor: Colors.black,
+//          selectedItemColor: Colors.yellow,
+//          onTap: _onItemTapped,
+        )
+    );
   }
 
   
