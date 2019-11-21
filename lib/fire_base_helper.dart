@@ -62,6 +62,17 @@ class FireBaseHelper {
         return mood;
     }
 
+    Future<bool> getIsSentimentAnalysisEnabled(String userId) async {
+        bool isSentimentAnalysisEnabled = false;
+        await _firestore.collection("users")
+            .document(userId)
+            .collection("userOptIns")
+            .document("isSentimentAnalysisEnabled").get().then((snapshot){
+            isSentimentAnalysisEnabled = snapshot.data["isSentimentAnalysisEnabled"];
+        });
+        return isSentimentAnalysisEnabled;
+    }
+
     void addJournalEntry(String userId, String dateTime, String journalEntry) {
         Map<String, dynamic> data = {'journal_entry':journalEntry};
         _firestore.collection("users")
@@ -81,6 +92,15 @@ class FireBaseHelper {
             .document(dateTime)
             .collection("user_entries")
             .document("mood")
+            .setData(data);
+    }
+
+    void addSentimentAnalysisOptInStatus(String userId, bool isSentimentAnalysisEnabled) {
+        Map<String, dynamic> data = {'isSentimentAnalysisEnabled': isSentimentAnalysisEnabled};
+        _firestore.collection("users")
+            .document(userId)
+            .collection("userOptIns")
+            .document("isSentimentAnalysisEnabled")
             .setData(data);
     }
 }
