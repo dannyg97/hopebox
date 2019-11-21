@@ -36,7 +36,8 @@ class JournalEntry extends StatelessWidget {
   final String userId;
   final VoidCallback logoutCallback;
   final bool isSentimentAnalysisEnabled;
-  static const String _title = 'What\'s on your mind?';  final FireBaseHelper _fireBaseHelper = FireBaseHelper();
+  static const String _title = 'What\'s on your mind?'; 
+  final FireBaseHelper _fireBaseHelper = FireBaseHelper();
 
   bool debugShowCheckedModeBanner = false;
   @override
@@ -163,7 +164,19 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
               ),
             ],
           ),
-        ));
+        ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          var input = myController.text;
+          myController.clear();
+          updateJournalEntry(input.toString());
+          Navigator.pop(context);
+        },
+        label: Text('Submit'),
+        icon: Icon(Icons.thumb_up),
+        backgroundColor: Colors.lightGreen,
+      ),
+    );
   }
 }
 
