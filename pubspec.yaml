@@ -26,13 +26,14 @@ dependencies:
   firebase_auth: ^0.14.0+5
   firebase_database: ^3.0.7
   cloud_firestore: ^0.12.10
-  intl: ^0.16.0
   charts_flutter: ^0.8.1 
   # firebase_auth: ^0.14.0+5
   # firebase_database: ^3.0.7
 
 
 dev_dependencies:
+  flutter_driver:
+    sdk: flutter    
   mockito: 3.0.0
   flutter_test:
     sdk: flutter
