@@ -90,10 +90,11 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   }
 
 
-  updateMood(int moodtype) {
-    _fireBaseHelper.addMood(
-        widget.userId, _dateTimeHelper.getCurrDateTime(), moodtype);
-    void initialiseSentimentAnalysisOptIn() {
+  updateMood(int moodtype){
+    _fireBaseHelper.addMood(widget.userId, _dateTimeHelper.getCurrDateTime(), moodtype);
+  }
+
+  void initialiseSentimentAnalysisOptIn() {
       _fireBaseHelper.getIsSentimentAnalysisEnabled(widget.userId).then((isSentimentAnalysisEnabled){
           setState(() {
               _isSentimentAnalysisEnabled = isSentimentAnalysisEnabled;
@@ -107,10 +108,6 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
           _entryInstances = entryInstances;
       });
     });
-  }
-
-  updateMood(int moodtype){
-    _fireBaseHelper.addMood(widget.userId, _dateTimeHelper.getCurrDateTime(), moodtype);
   }
 
   void _showDialog() {
