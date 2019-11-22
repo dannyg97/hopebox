@@ -9,7 +9,6 @@ class FireBaseHelper {
     Future<List<EntryInstance>> getAllUserEntryInstances(String userId) async {
         List<EntryInstance> entryInstances = new List();
         List<String> dates = await getAllDatesWithMoodOrJournalEntries(userId);
-
         for (String date in dates) {
             String journalEntry = await getJournalEntry(userId, date);
             int mood = await getMood(userId, date);
@@ -26,6 +25,7 @@ class FireBaseHelper {
             .document(userId)
             .collection("dates")
             .getDocuments().then((documentList){
+                print("date is ${userId}");
                 for (var value in documentList.documents) {
                     dates.add(value.documentID);
                 }
@@ -75,6 +75,14 @@ class FireBaseHelper {
 
     void addJournalEntry(String userId, String dateTime, String journalEntry) {
         Map<String, dynamic> data = {'journal_entry':journalEntry};
+        Map<String, dynamic> date = {'date': dateTime};
+        
+        _firestore.collection("users")
+            .document(userId)
+            .collection("dates")
+            .document(dateTime)
+            .setData(date);
+            
         _firestore.collection("users")
             .document(userId)
             .collection("dates")
@@ -84,8 +92,16 @@ class FireBaseHelper {
             .setData(data);
     }
 
-    Future<void> addMood(String userId, String dateTime, int mood) async {
+    Future<void> addMood(String userId, String dateTime, int mood) {
         Map<String, dynamic> data = {'mood': mood};
+        Map<String, dynamic> date = {'date': dateTime};
+        
+        _firestore.collection("users")
+            .document(userId)
+            .collection("dates")
+            .document(dateTime)
+            .setData(date);
+
         return _firestore.collection("users")
             .document(userId)
             .collection("dates")
