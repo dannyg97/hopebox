@@ -5,8 +5,10 @@ import 'datasets/todo.dart';
 import 'dart:async';
 import './account/information.dart';
 import './mood_entry.dart';
-import './history/history.dart';
+import './calendar.dart';
 import './analysis/analysis.dart';
+import './history/history.dart';
+
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.auth, this.userId, this.logoutCallback})
@@ -219,7 +221,8 @@ static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWei
       case 0:
         return showTodoList();
       case 1:
-        return new HistoryPage(); 
+        print('sidfjslkdfjslkdfjlsd fjlksdfj');
+        return new HistoryPage(auth: widget.auth, userId: widget.userId, logoutCallback: widget.logoutCallback);
       case 2: 
         return new AnalysisPage(auth: widget.auth, userId: widget.userId, logoutCallback: widget.logoutCallback); 
       case 3:
