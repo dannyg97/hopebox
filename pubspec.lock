@@ -92,7 +92,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.2"
-
   fancy_bottom_navigation:
     dependency: "direct main"
     description:
@@ -100,15 +99,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.2"
-
-  file:
-    dependency: transitive
-    description:
-      name: file
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "5.0.8+1"
-
   firebase_auth:
     dependency: "direct main"
     description:
@@ -142,11 +132,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_driver:
-    dependency: "direct dev"
-    description: flutter
-    source: sdk
-    version: "0.0.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -159,11 +144,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.19"
-  fuchsia_remote_debug_protocol:
-    dependency: transitive
-    description: flutter
-    source: sdk
-    version: "0.0.0"
   glob:
     dependency: transitive
     description:
@@ -171,6 +151,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.0"
+  gradient_app_bar:
+    dependency: "direct main"
+    description:
+      name: gradient_app_bar
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.3"
   html:
     dependency: transitive
     description:
@@ -200,12 +187,12 @@ packages:
     source: hosted
     version: "3.1.3"
   intl:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: intl
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.15.8"
+    version: "0.16.0"
   io:
     dependency: transitive
     description:
@@ -325,13 +312,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.0+1"
-  platform:
-    dependency: transitive
-    description:
-      name: platform
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.2.1"
   pool:
     dependency: transitive
     description:
@@ -339,13 +319,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.4.0"
-  process:
-    dependency: transitive
-    description:
-      name: process
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.0.11"
   pub_semver:
     dependency: transitive
     description:
