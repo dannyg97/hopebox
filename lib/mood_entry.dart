@@ -7,7 +7,8 @@ import 'package:my_app/fire_base_helper.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-// import 'package:timer_builder/timer_builder.dart';
+import 'package:my_app/entry_instance.dart';
+
 import 'registration/authentication.dart';
 import 'journal_entry.dart';
 import 'date_time_helper.dart';
@@ -55,22 +56,17 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   DateTimeHelper _dateTimeHelper = new DateTimeHelper();
-
-  int _counter = 0;
+  List<EntryInstance> _entryInstances;
+  bool _isSentimentAnalysisEnabled = false;
   int _emojiColour = -1;
  // var string[10];
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-      //TODO: insert database 
-    });
-  }
 
   @override
   void initState(){
     super.initState();
     initialiseMood();
+    initialiseSentimentAnalysisOptIn();
+    initialiseEntryInstances();
   }
 
   void initialiseMood() {
@@ -81,8 +77,48 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       });
   }
 
+    void initialiseSentimentAnalysisOptIn() {
+      _fireBaseHelper.getIsSentimentAnalysisEnabled(widget.userId).then((isSentimentAnalysisEnabled){
+          setState(() {
+              _isSentimentAnalysisEnabled = isSentimentAnalysisEnabled;
+          });
+      });
+  }
+
+  void initialiseEntryInstances() {
+    _fireBaseHelper.getAllUserEntryInstances(widget.userId).then((entryInstances){
+      setState(() {
+          _entryInstances = entryInstances;
+      });
+    });
+  }
+
   updateMood(int moodtype){
     _fireBaseHelper.addMood(widget.userId, _dateTimeHelper.getCurrDateTime(), moodtype);
+  }
+
+  void _showDialog() {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          key: new Key('alert_dialog'),
+          title: new Text("Sentiment Analysis Enabled"),
+          content: new Text("You've enabled our journal entry sentiment analysis feature, so your moods are being automatically detected.\n\nIn order to disable this feature, please toggle the feature off."),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Close"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -94,12 +130,6 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             new Row(
-              children: <Widget>[
-
-              ],
-         
-            ),
-            new Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Padding(
@@ -109,6 +139,24 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                     style: new TextStyle(fontSize: 30.0, color: Colors.black),
                   ),
                   
+                )
+              ],
+            ),
+            new Row(
+              children: <Widget>[
+                new Flexible (
+                  child: new SwitchListTile(
+                    key: new Key('sentiment_analysis_switch'),
+                    value: _isSentimentAnalysisEnabled,
+                    title: const Text('Journal Entry Sentiment Analysis'),
+                    onChanged: (value) {
+                      _fireBaseHelper.addSentimentAnalysisOptInStatus(widget.userId, value);
+                      setState(() {
+                        _isSentimentAnalysisEnabled = value;
+                      });
+                    },
+                    secondary: const Icon(Icons.lightbulb_outline),
+                  )
                 )
               ],
             ),
@@ -143,22 +191,25 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                     width: 60.0,
                     margin: new EdgeInsets.only(right: 300.0, top: 0.0),
                     child: new IconButton(
+                          key: new Key('very_dissatisfied'),
                           icon: new Icon(Icons.sentiment_very_dissatisfied,
                               size: 50,
                               color: (_emojiColour == 0) ? Colors.red
                               : Colors.grey,
                     ),
-                          onPressed: () {
-                            setState(() {
-                              if(_emojiColour == 0 ){
-                              _emojiColour = -1;
-                              } else {
-                              _emojiColour = 0;
-                              _counter=0;
-                              print("The value of the counter is  $_counter");
-                              }
-                            });
-                          }
+                      onPressed: () {
+                        if (_isSentimentAnalysisEnabled) {
+                          _showDialog();
+                        } else {
+                          setState(() {
+                            if(_emojiColour == 0 ){
+                            _emojiColour = -1;
+                            } else {
+                            _emojiColour = 0;
+                            }
+                          });
+                        }
+                      }
                       ),
 
 
@@ -168,6 +219,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                       width: 60.0,
                       margin: new EdgeInsets.only(right: 150.0, top: 0.0),
                       child: new IconButton(
+                          key: new Key('dissatisfied'),
                           icon: new Icon(
                             Icons.sentiment_dissatisfied,
                               size: 50,
@@ -175,17 +227,18 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                               : Colors.grey,
                       ),
                           onPressed: () {
-                            setState(() {
-                              if(_emojiColour == 1) {
-                                _emojiColour = -1;
-                              } else {
-                                _emojiColour = 1;
-                                _counter=1;
-                                
-                              }
-                            });
-                            print('The value of the counter is  $_counter');
-                          }
+                        if (_isSentimentAnalysisEnabled) {
+                          _showDialog();
+                        } else {
+                          setState(() {
+                            if(_emojiColour == 1 ){
+                            _emojiColour = -1;
+                            } else {
+                            _emojiColour = 1;
+                            }
+                          });
+                        }
+                      }
                       )
                   ),
                   new Container(
@@ -193,6 +246,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                       width: 60.0,
                       margin: new EdgeInsets.only(right: 0.0, top: 0.0),
                       child: new IconButton(
+                          key: new Key('neutral'),
                           icon: new Icon(
                               Icons.sentiment_neutral,
                               size: 50,
@@ -200,16 +254,18 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                               : Colors.grey,
                       ),
                           onPressed: () {
-                            setState(() {
-                              if(_emojiColour == 2) {
-                                _emojiColour = -1;
-                              } else {
-                                _emojiColour = 2;
-                                _counter=2;
-                              }
-                            });
-                            print('The value of the counter is  $_counter');
-                          }
+                        if (_isSentimentAnalysisEnabled) {
+                          _showDialog();
+                        } else {
+                          setState(() {
+                            if(_emojiColour == 2){
+                            _emojiColour = -1;
+                            } else {
+                            _emojiColour = 2;
+                            }
+                          });
+                        }
+                      }
                       )
                   ),
                   new Container(
@@ -217,20 +273,24 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                       width: 60.0,
                       margin: new EdgeInsets.only(left: 150.0, top: 0.0),
                       child: new IconButton(
+                          key: new Key('satisfied'),
                           icon: new Icon(Icons.sentiment_satisfied, size: 50,
                             color: (_emojiColour == 3) ? Colors.greenAccent
                                 : Colors.grey,
                           ),
                           onPressed: () {
-                            setState(() {
-                              if(_emojiColour == 3) {
-                                _emojiColour = -1;
-                              } else {
-                                _emojiColour = 3;
-                                _counter=3;
-                              }                            });
-                            print('The value of the counter is  $_counter');
-                          }
+                        if (_isSentimentAnalysisEnabled) {
+                          _showDialog();
+                        } else {
+                          setState(() {
+                            if(_emojiColour == 3 ){
+                            _emojiColour = -1;
+                            } else {
+                            _emojiColour = 3;
+                            }
+                          });
+                        }
+                      }
                       )
                   ),
                   new Container(
@@ -238,22 +298,24 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                       width: 60.0,
                       margin: new EdgeInsets.only(left: 300.0, top: 0.0),
                       child: new IconButton(
+                          key: new Key('very_satisfied'),
                           icon: new Icon(Icons.sentiment_very_satisfied, size: 50,
                               color: (_emojiColour == 4) ? Colors.green
                               : Colors.grey,
                       ),
                           onPressed: () {
-
-                            setState(() {
-                              if(_emojiColour == 4) {
-                                _emojiColour = -1;
-                              } else {
-                                _emojiColour = 4;
-                                _counter=4;
-                              }
-                            });
-                            print('The value of the counter is  $_counter');
-                          }
+                        if (_isSentimentAnalysisEnabled) {
+                          _showDialog();
+                        } else {
+                          setState(() {
+                            if(_emojiColour == 4 ){
+                            _emojiColour = -1;
+                            } else {
+                            _emojiColour = 4;
+                            }
+                          });
+                        }
+                      }
                       )
                   )
                 
@@ -265,11 +327,16 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                   child: RaisedButton(
                     child: new Icon(Icons.arrow_forward),
                     onPressed: (){
-                      updateMood(_counter);
-                      print("The $_counter is entered");
+                      updateMood(_emojiColour);
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => JournalEntry(auth: widget.auth, userId: widget.userId, logoutCallback: widget.logoutCallback)),
+                        MaterialPageRoute(builder: (context) => JournalEntry(
+                            auth: widget.auth, 
+                            userId: widget.userId, 
+                            logoutCallback: widget.logoutCallback,
+                            isSentimentAnalysisEnabled: _isSentimentAnalysisEnabled
+                          )
+                        ),
                       ).then((value) {
                           initialiseMood();
                       });

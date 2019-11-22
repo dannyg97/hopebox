@@ -6,7 +6,7 @@ import 'api_exception.dart';
 
 class ApiBaseHelper {
 
-    final String _baseUrl = "https://hopebox-sentiment-analysis.cognitiveservices.azure.com";
+    final String _baseUrl = "https://hope-box.cognitiveservices.azure.com";
     final _httpClient;
     ApiBaseHelper([this._httpClient]);
 
