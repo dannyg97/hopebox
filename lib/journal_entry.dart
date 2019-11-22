@@ -37,7 +37,6 @@ class JournalEntry extends StatelessWidget {
   final VoidCallback logoutCallback;
   static const String _title = 'What\'s on your mind?';
   final FireBaseHelper _fireBaseHelper = FireBaseHelper();
-
   bool debugShowCheckedModeBanner = false;
   @override
   Widget build(BuildContext context) {

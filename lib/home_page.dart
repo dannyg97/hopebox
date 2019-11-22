@@ -222,7 +222,9 @@ static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWei
         return showTodoList();
       case 1:
         print('sidfjslkdfjslkdfjlsd fjlksdfj');
-        return new HistoryPage(auth: widget.auth, userId: widget.userId, logoutCallback: widget.logoutCallback);
+
+        return new AccountPage();
+        //return new HistoryPage(auth: widget.auth, userId: widget.userId, logoutCallback: widget.logoutCallback);
       case 2: 
         return new AnalysisPage(auth: widget.auth, userId: widget.userId, logoutCallback: widget.logoutCallback); 
       case 3:

@@ -173,7 +173,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   void _onDaySelected(DateTime day, List events) {
     print('We currently have the following amount of entries: ');
     print(_entryDates.length);
-    print(emoji);
+    print(widget.userId);
+    //print(emoji);
     for(var i = 0; i < _entryDates.length; i++) {
       print(_entryDates[i]);
     }
