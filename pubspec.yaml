@@ -30,8 +30,11 @@ dependencies:
   intl: ^0.16.0
   charts_flutter: ^0.8.1
   fancy_bottom_navigation: ^0.3.2
-
+  charts_flutter: ^0.8.1 
+  
 dev_dependencies:
+  flutter_driver:
+    sdk: flutter    
   mockito: 3.0.0
   flutter_test:
     sdk: flutter
