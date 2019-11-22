@@ -84,9 +84,9 @@ class FireBaseHelper {
             .setData(data);
     }
 
-    void addMood(String userId, String dateTime, int mood) {
+    Future<void> addMood(String userId, String dateTime, int mood) async {
         Map<String, dynamic> data = {'mood': mood};
-        _firestore.collection("users")
+        return _firestore.collection("users")
             .document(userId)
             .collection("dates")
             .document(dateTime)

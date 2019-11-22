@@ -101,7 +101,6 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
   _updateDoneIconEnabledState() {
     setState(() {
-      print("setting state");
       _isEnabled = myController.text.isNotEmpty ? true : false;
     });
   }
@@ -112,13 +111,17 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     super.dispose();
   }
 
-  updateJournalEntry(String journal){
+  updateJournalEntry(String journal) async {
     _fireBaseHelper.addJournalEntry(widget.userId, _dateTimeHelper.getCurrDateTime(), journal.toString());
-    if (widget.isSentimentAnalysisEnabled)
-      _sentimentAnalysisHelper.analyseTextSentiment(journal.toString()).then((score) {
-        _fireBaseHelper.addMood(widget.userId, _dateTimeHelper.getCurrDateTime(), score);
+    
+    if (widget.isSentimentAnalysisEnabled) {
+      await _sentimentAnalysisHelper.analyseTextSentiment(journal.toString()).then((score) {
+        _fireBaseHelper.addMood(widget.userId, _dateTimeHelper.getCurrDateTime(), score).then((x){
+          return;
+        });
       });
     }
+  }
 
   getIsEnabled() {
     return _isEnabled;
@@ -132,10 +135,10 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             // backgroundColor: const Color(0xFFFADA5E),
             // leading: new IconButton(icon: new Icon(Icons.arrow_back)),
             actions: [new IconButton(icon: new Icon(Icons.done),
-                onPressed: _isEnabled ? () {
+                onPressed: _isEnabled ? () async {
                   var input = myController.text;
                   myController.clear();
-                  updateJournalEntry(input.toString());
+                  await updateJournalEntry(input.toString());
                   Navigator.pop(context);
                 } : null)
             ]

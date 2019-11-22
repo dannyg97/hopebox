@@ -7,7 +7,8 @@ import 'package:my_app/fire_base_helper.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-// import 'package:timer_builder/timer_builder.dart';
+import 'package:my_app/entry_instance.dart';
+
 import 'registration/authentication.dart';
 import 'journal_entry.dart';
 import 'date_time_helper.dart';
@@ -55,6 +56,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   DateTimeHelper _dateTimeHelper = new DateTimeHelper();
+  List<EntryInstance> _entryInstances;
   bool _isSentimentAnalysisEnabled = false;
   int _emojiColour = -1;
  // var string[10];
@@ -64,6 +66,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     super.initState();
     initialiseMood();
     initialiseSentimentAnalysisOptIn();
+    initialiseEntryInstances();
   }
 
   void initialiseMood() {
@@ -80,6 +83,14 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
               _isSentimentAnalysisEnabled = isSentimentAnalysisEnabled;
           });
       });
+  }
+
+  void initialiseEntryInstances() {
+    _fireBaseHelper.getAllUserEntryInstances(widget.userId).then((entryInstances){
+      setState(() {
+          _entryInstances = entryInstances;
+      });
+    });
   }
 
   updateMood(int moodtype){
