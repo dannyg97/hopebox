@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:charts_flutter/flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,6 +14,7 @@ import 'package:my_app/api_base_helper.dart';
 import 'package:http/http.dart';
 import 'package:my_app/entry_instance.dart';
 import 'package:my_app/date_time_helper.dart';
+import 'dart:io';
 
 
 
@@ -77,7 +80,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   // a mapping of certain arbitrary events to a name
-  Map<DateTime, List> _events;
+  Map<DateTime, List> _events = Map();
   List _selectedEvents;
 
   // begin to call the calendar
@@ -110,13 +113,34 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   }
 
+  String getMood(int mood) {
+    String returnS = '';
+    switch (mood) {
+      case 0:
+        returnS = 'You were feeling awful';
+        return returnS;
+      case 1:
+        returnS = 'You were feeling a bit on the bad side';
+        return returnS;
+      case 2:
+        returnS = 'You were feeling neutral';
+        return returnS;
+      case 3:
+      returnS = 'You were feeling happy!';
+      return returnS;
+      case 4:
+        returnS = 'You were feeling ecstatic!';
+        return returnS;
+    }
+  }
+
   List<String> _entryDates;
   List<int> entryYear = [];
   List<int> entryMonth = [];
   List<int> entryDay = [];
   List<int> moodRating = [];
-  List<String> entries = [];
-  List<String> combinedEntry = [];
+  var entries = new List<String>();
+  var combinedEntry = new List<String>();
 
 
   Future <void> getEntries(String userId)  {
@@ -162,26 +186,38 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    final _selectedDay = DateTime.now();
+    print('we HERE');
     _fireBaseHelper.getAllDatesWithMoodOrJournalEntries(widget.userId).then((dates){
       setState(() {
+        print('we HERE2');
+
         _entryDates = dates;
         print(_entryDates.length);
         for(var i = 0; i < _entryDates.length; i++) {
+          print('we HERE3');
 
           _fireBaseHelper.getMood(widget.userId, _entryDates[i]).then((mood){
             setState(() {
-              moodRating[i] = mood;
-              combinedEntry.add(mood.toString());
+              print('we HERE4');
+
+              moodRating.add(mood);
+
+              _fireBaseHelper.getJournalEntry(widget.userId, _entryDates[i]).then((journalEntry){
+                setState(() {
+                  entries.add(journalEntry);
+                  print('we HERE5');
+
+                  //combinedEntry[i] = mood.toString() + ' ' + journalEntry;
+                 // print(combinedEntry[i]);
+                  //  print(entries[i]);
+                });
+              });
+
             });
           });
 
-          _fireBaseHelper.getJournalEntry(widget.userId, _entryDates[i]).then((journalEntry){
-            setState(() {
-              entries[i] = journalEntry;
-              combinedEntry[i] = combinedEntry[i] + ' ' + journalEntry;
-            //  print(entries[i]);
-            });
-          });
+
 
           List temp = [];
           temp = _entryDates[i].split("-");
@@ -190,9 +226,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
           entryDay.add(int.parse(temp[2]));
 
         }
-        final _selectedDay = DateTime.now();
         _events = {
-          DateTime(entryYear[0], entryMonth[0], entryDay[0]):[entries[0]],
+          DateTime(entryYear[0], entryMonth[0], entryDay[0]):['slidjfskdjfsd'],
           _selectedDay.subtract(Duration(days: 1000)): ['Event A2', 'Event B2', 'Event C2', 'Event D2'],
 
         };
@@ -242,17 +277,19 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   // what happens on the day you have clicked
   void _onDaySelected(DateTime day, List events) {
-    /*print(_entryDates.length);
-    for(var i = 0; i < _entryDates.length; i++) {
-      print(_entryDates[i]);
-      List temp = [];
-      temp = _entryDates[i].split("-");
-      int x = int.parse(temp[0]);
-      entryYear.add(int.parse(temp[0]));
-      entryMonth.add(int.parse(temp[1]));
-      entryDay.add(int.parse(temp[2]));
-    }*/
+    final _selectedDay = DateTime.now();
 
+    for(var i = 0; i < entryYear.length; i++) {
+     // _events[DateTime(entryYear[i], entryMonth[i], entryDay[i])] = [entries[i]];
+      String returnS = getMood(moodRating[i]);
+      var time = new DateTime(entryYear[i], entryMonth[i], entryDay[i]);
+      String addEntry = entries[i];
+      String combinedMessage = returnS + ' and you wrote: \n' + entries[i];
+      _events[time] = [combinedMessage];
+      };
+
+
+    _selectedEvents = _events[_selectedDay] ?? [];
 
     setState(() {
       _selectedEvents = events;
