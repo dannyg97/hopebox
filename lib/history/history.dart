@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:charts_flutter/flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,23 +14,9 @@ import 'package:my_app/api_base_helper.dart';
 import 'package:http/http.dart';
 import 'package:my_app/entry_instance.dart';
 import 'package:my_app/date_time_helper.dart';
+import 'dart:io';
 
 
-
-
-final Map<DateTime, List> _holidays = {
-  DateTime(2019, 1, 1): ['New Year\'s Day'],
-  DateTime(2019, 1, 6): ['Christmas'],
-  DateTime(2019, 2, 14): ['Valentine\'s Day'],
-  DateTime(2019, 4, 21): ['Easter Sunday'],
-  DateTime(2019, 4, 22): ['Easter Monday'],
-  DateTime(2020, 1, 1): ['New Year\'s Day'],
-  DateTime(2020, 12, 25): ['Christmas'],
-  DateTime(2020, 2, 14): ['Valentine\'s Day'],
-  DateTime(2020, 4, 21): ['Easter Sunday'],
-  DateTime(2019, 4, 22): ['Easter Monday'],
-
-};
 
 
 class HistoryPage extends StatelessWidget {
@@ -77,7 +65,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   // a mapping of certain arbitrary events to a name
-  Map<DateTime, List> _events;
+  Map<DateTime, List> _events = Map();
   List _selectedEvents;
 
   // begin to call the calendar
@@ -91,74 +79,117 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   DateTimeHelper _dateTimeHelper = new DateTimeHelper();
-  //List<EntryInstance> _entryInstances;
 
-  //String userID = MyHomePage.user_ID;
+
 
   int emoji;
+
+
+  String getMood(int mood) {
+    String returnS = '';
+    switch (mood) {
+      case 0:
+        returnS = 'You were feeling awful';
+        return returnS;
+      case 1:
+        returnS = 'You were feeling a bit on the bad side';
+        return returnS;
+      case 2:
+        returnS = 'You were feeling neutral';
+        return returnS;
+      case 3:
+      returnS = 'You were feeling happy!';
+      return returnS;
+      case 4:
+        returnS = 'You were feeling ecstatic!';
+        return returnS;
+    }
+  }
+
   List<String> _entryDates;
-  void getEntries(String userId) {
-    //print('We have entered this function');
+  List<int> entryYear = [];
+  List<int> entryMonth = [];
+  List<int> entryDay = [];
+  List<int> moodRating = [];
+  var entries = new List<String>();
+  var combinedEntry = new List<String>();
+
+
+  Future <void> getEntries(String userId)  {
+
     _fireBaseHelper.getAllDatesWithMoodOrJournalEntries(userId).then((dates){
       setState(() {
-        //print('Confirming this functino works');
-        print(widget.userId);
         _entryDates = dates;
+        print(_entryDates.length);
+        for(var i = 0; i < _entryDates.length; i++) {
+          List temp = [];
+          temp = _entryDates[i].split("-");
+          entryYear.add(int.parse(temp[0]));
+          entryMonth.add(int.parse(temp[1]));
+          entryDay.add(int.parse(temp[2]));
+        }
       });
     });
   }
 
 
-  void initialiseMood() {
-    _fireBaseHelper.getMood(widget.userId, _dateTimeHelper.getCurrDateTime()).then((mood){
-      setState(() {
-        print('hey hello hello');
-        emoji = mood;
-      });
-    });
-  }
+
 
 
 
   @override
   void initState() {
     super.initState();
-    getEntries(widget.userId);
-    initialiseMood();
-    print('HEY HELLO WE HERE');
-    print(widget.userId);
     final _selectedDay = DateTime.now();
 
+    _fireBaseHelper.getAllDatesWithMoodOrJournalEntries(widget.userId).then((dates){
+      setState(() {
+        _entryDates = dates;
+        print(_entryDates.length);
+        for(var i = 0; i < _entryDates.length; i++) {
 
-    
-    _events = {
-      _selectedDay.subtract(Duration(days: 30)): ['Event A0', 'Event B0', 'Event C0'],
-      _selectedDay.subtract(Duration(days: 27)): ['Event A1'],
-      _selectedDay.subtract(Duration(days: 20)): ['Event A2', 'Event B2', 'Event C2', 'Event D2'],
-      _selectedDay.subtract(Duration(days: 16)): ['Event A3', 'Event B3'],
-      _selectedDay.subtract(Duration(days: 10)): ['Event A4', 'Event B4', 'Event C4'],
-      _selectedDay.subtract(Duration(days: 4)): ['Event A5', 'Event B5', 'Event C5'],
-      _selectedDay.subtract(Duration(days: 2)): ['Event A6', 'Event B6'],
-      _selectedDay: ['Event A7', 'Event B7', 'Event C7', 'Event D7'],
-      _selectedDay.add(Duration(days: 1)): ['Event A8', 'Event B8', 'Event C8', 'Event D8'],
-      _selectedDay.add(Duration(days: 3)): Set.from(['Event A9', 'Event A9', 'Event B9']).toList(),
-      _selectedDay.add(Duration(days: 7)): ['Event A10', 'Event B10', 'Event C10'],
-      _selectedDay.add(Duration(days: 11)): ['Event A11', 'Event B11'],
-      _selectedDay.add(Duration(days: 17)): ['Event A12', 'Event B12', 'Event C12', 'Event D12'],
-      _selectedDay.add(Duration(days: 22)): ['Event A13', 'Event B13'],
-      _selectedDay.add(Duration(days: 26)): ['Event A14', 'Event B14', 'Event C14'],
-    };
+          _fireBaseHelper.getMood(widget.userId, _entryDates[i]).then((mood){
+            setState(() {
+
+              moodRating.add(mood);
+
+              _fireBaseHelper.getJournalEntry(widget.userId, _entryDates[i]).then((journalEntry){
+                setState(() {
+                  entries.add(journalEntry);
+
+                });
+              });
+
+            });
+          });
 
 
-    // selected days
-    _selectedEvents = _events[_selectedDay] ?? [];
+
+          List temp = [];
+          temp = _entryDates[i].split("-");
+          entryYear.add(int.parse(temp[0]));
+          entryMonth.add(int.parse(temp[1]));
+          entryDay.add(int.parse(temp[2]));
+
+        }
+        _events = {
+         // DateTime(entryYear[0], entryMonth[0], entryDay[0]):['slidjfskdjfsd'],
+          _selectedDay.subtract(Duration(days: 1000)): ['Event A2', 'Event B2', 'Event C2', 'Event D2'],
+          _selectedDay.subtract(Duration(days: 900)): ['Event A2', 'Event B2', 'Event C2', 'Event D2'],
+
+
+        };
+
+        _selectedEvents = _events[_selectedDay] ?? [];
+
+      });
+    });
+
     _calendarController = CalendarController();
-
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 400),
     );
-
     _animationController.forward();
   }
 
@@ -171,12 +202,23 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   // what happens on the day you have clicked
   void _onDaySelected(DateTime day, List events) {
-    print('We currently have the following amount of entries: ');
-    print(_entryDates.length);
-    print(emoji);
-    for(var i = 0; i < _entryDates.length; i++) {
-      print(_entryDates[i]);
-    }
+    final _selectedDay = DateTime.now();
+
+    for(var i = 0; i < entryYear.length; i++) {
+     // _events[DateTime(entryYear[i], entryMonth[i], entryDay[i])] = [entries[i]];
+      String returnS = getMood(moodRating[i]);
+      var time = new DateTime(entryYear[i], entryMonth[i], entryDay[i]);
+      String addEntry = '';
+      addEntry = entries[i];
+      /*if(entries[i]!= null) {
+        addEntry = entries[i];
+      }*/
+      String combinedMessage = returnS + ' and you wrote: \n' + addEntry;
+      _events[time] = [combinedMessage];
+      };
+
+
+    _selectedEvents = _events[_selectedDay] ?? [];
 
     setState(() {
       _selectedEvents = events;
@@ -185,7 +227,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   // WE'LL COME BACK TO THIS
   void _onVisibleDaysChanged(DateTime first, DateTime last, CalendarFormat format) {
-    print('CALLBACK: _onVisibleDaysChanged');
   }
 
   // OVERRIDE SOMETHING
@@ -213,12 +254,12 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     return TableCalendar(
       calendarController: _calendarController,
       events: _events,
-      holidays: _holidays,
+      //holidays: _holidays,
       startingDayOfWeek: StartingDayOfWeek.monday,
       calendarStyle: CalendarStyle(
         selectedColor: Colors.blueAccent[400],        // this is the date selected
         todayColor: Colors.tealAccent[200], // today's date
-        markersColor: Colors.teal[700], // this is the marker colour
+        markersColor: Colors.red[700], // this is the marker colour
         outsideDaysVisible: false,
       ),
       headerStyle: HeaderStyle(
@@ -240,7 +281,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       locale: 'pl_PL',
       calendarController: _calendarController,
       events: _events,
-      holidays: _holidays,
+      //holidays: _holidays,
       initialCalendarFormat: CalendarFormat.month,
       formatAnimation: FormatAnimation.slide,
       startingDayOfWeek: StartingDayOfWeek.sunday,
@@ -396,7 +437,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
           child: Text('Select Todays Date'),
           onPressed: () {
             _calendarController.setSelectedDay(
-              DateTime(2019, 11, 27),
+              DateTime.now(),
               runCallback: true,
             );
           },

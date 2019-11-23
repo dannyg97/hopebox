@@ -85,35 +85,35 @@
 55        </activity>
 56
 57        <service
-57-->[:firebase_core] /Users/kavehfaghani/Uni/project/hopebox/build/firebase_core/intermediates/library_manifest/debug/AndroidManifest.xml:8:9-12:19
+57-->[:firebase_auth] /Users/kavehfaghani/Uni/project/hopebox/build/firebase_auth/intermediates/library_manifest/debug/AndroidManifest.xml:8:9-12:19
 58            android:name="com.google.firebase.components.ComponentDiscoveryService"
-58-->[:firebase_core] /Users/kavehfaghani/Uni/project/hopebox/build/firebase_core/intermediates/library_manifest/debug/AndroidManifest.xml:8:18-89
+58-->[:firebase_auth] /Users/kavehfaghani/Uni/project/hopebox/build/firebase_auth/intermediates/library_manifest/debug/AndroidManifest.xml:8:18-89
 59            android:exported="false" >
 59-->[com.google.android.gms:play-services-measurement-api:17.2.0] /Users/kavehfaghani/.gradle/caches/transforms-2/files-2.1/95cc13d8ab29f0c79f0ab230dd33b52b/play-services-measurement-api-17.2.0/AndroidManifest.xml:29:13-37
 60            <meta-data
-60-->[:firebase_core] /Users/kavehfaghani/Uni/project/hopebox/build/firebase_core/intermediates/library_manifest/debug/AndroidManifest.xml:9:13-11:85
-61                android:name="com.google.firebase.components:io.flutter.plugins.firebase.core.FlutterFirebaseAppRegistrar"
-61-->[:firebase_core] /Users/kavehfaghani/Uni/project/hopebox/build/firebase_core/intermediates/library_manifest/debug/AndroidManifest.xml:10:17-123
+60-->[:firebase_auth] /Users/kavehfaghani/Uni/project/hopebox/build/firebase_auth/intermediates/library_manifest/debug/AndroidManifest.xml:9:13-11:85
+61                android:name="com.google.firebase.components:io.flutter.plugins.firebaseauth.FlutterFirebaseAppRegistrar"
+61-->[:firebase_auth] /Users/kavehfaghani/Uni/project/hopebox/build/firebase_auth/intermediates/library_manifest/debug/AndroidManifest.xml:10:17-122
 62                android:value="com.google.firebase.components.ComponentRegistrar" />
-62-->[:firebase_core] /Users/kavehfaghani/Uni/project/hopebox/build/firebase_core/intermediates/library_manifest/debug/AndroidManifest.xml:11:17-82
+62-->[:firebase_auth] /Users/kavehfaghani/Uni/project/hopebox/build/firebase_auth/intermediates/library_manifest/debug/AndroidManifest.xml:11:17-82
 63            <meta-data
-63-->[:firebase_auth] /Users/kavehfaghani/Uni/project/hopebox/build/firebase_auth/intermediates/library_manifest/debug/AndroidManifest.xml:9:13-11:85
-64                android:name="com.google.firebase.components:io.flutter.plugins.firebaseauth.FlutterFirebaseAppRegistrar"
-64-->[:firebase_auth] /Users/kavehfaghani/Uni/project/hopebox/build/firebase_auth/intermediates/library_manifest/debug/AndroidManifest.xml:10:17-122
+63-->[:firebase_database] /Users/kavehfaghani/Uni/project/hopebox/build/firebase_database/intermediates/library_manifest/debug/AndroidManifest.xml:9:13-11:85
+64                android:name="com.google.firebase.components:io.flutter.plugins.firebase.database.FlutterFirebaseAppRegistrar"
+64-->[:firebase_database] /Users/kavehfaghani/Uni/project/hopebox/build/firebase_database/intermediates/library_manifest/debug/AndroidManifest.xml:10:17-127
 65                android:value="com.google.firebase.components.ComponentRegistrar" />
-65-->[:firebase_auth] /Users/kavehfaghani/Uni/project/hopebox/build/firebase_auth/intermediates/library_manifest/debug/AndroidManifest.xml:11:17-82
+65-->[:firebase_database] /Users/kavehfaghani/Uni/project/hopebox/build/firebase_database/intermediates/library_manifest/debug/AndroidManifest.xml:11:17-82
 66            <meta-data
-66-->[:firebase_database] /Users/kavehfaghani/Uni/project/hopebox/build/firebase_database/intermediates/library_manifest/debug/AndroidManifest.xml:9:13-11:85
-67                android:name="com.google.firebase.components:io.flutter.plugins.firebase.database.FlutterFirebaseAppRegistrar"
-67-->[:firebase_database] /Users/kavehfaghani/Uni/project/hopebox/build/firebase_database/intermediates/library_manifest/debug/AndroidManifest.xml:10:17-127
+66-->[:cloud_firestore] /Users/kavehfaghani/Uni/project/hopebox/build/cloud_firestore/intermediates/library_manifest/debug/AndroidManifest.xml:9:13-11:85
+67                android:name="com.google.firebase.components:io.flutter.plugins.firebase.cloudfirestore.FlutterFirebaseAppRegistrar"
+67-->[:cloud_firestore] /Users/kavehfaghani/Uni/project/hopebox/build/cloud_firestore/intermediates/library_manifest/debug/AndroidManifest.xml:10:17-133
 68                android:value="com.google.firebase.components.ComponentRegistrar" />
-68-->[:firebase_database] /Users/kavehfaghani/Uni/project/hopebox/build/firebase_database/intermediates/library_manifest/debug/AndroidManifest.xml:11:17-82
+68-->[:cloud_firestore] /Users/kavehfaghani/Uni/project/hopebox/build/cloud_firestore/intermediates/library_manifest/debug/AndroidManifest.xml:11:17-82
 69            <meta-data
-69-->[:cloud_firestore] /Users/kavehfaghani/Uni/project/hopebox/build/cloud_firestore/intermediates/library_manifest/debug/AndroidManifest.xml:9:13-11:85
-70                android:name="com.google.firebase.components:io.flutter.plugins.firebase.cloudfirestore.FlutterFirebaseAppRegistrar"
-70-->[:cloud_firestore] /Users/kavehfaghani/Uni/project/hopebox/build/cloud_firestore/intermediates/library_manifest/debug/AndroidManifest.xml:10:17-133
+69-->[:firebase_core] /Users/kavehfaghani/Uni/project/hopebox/build/firebase_core/intermediates/library_manifest/debug/AndroidManifest.xml:9:13-11:85
+70                android:name="com.google.firebase.components:io.flutter.plugins.firebase.core.FlutterFirebaseAppRegistrar"
+70-->[:firebase_core] /Users/kavehfaghani/Uni/project/hopebox/build/firebase_core/intermediates/library_manifest/debug/AndroidManifest.xml:10:17-123
 71                android:value="com.google.firebase.components.ComponentRegistrar" />
-71-->[:cloud_firestore] /Users/kavehfaghani/Uni/project/hopebox/build/cloud_firestore/intermediates/library_manifest/debug/AndroidManifest.xml:11:17-82
+71-->[:firebase_core] /Users/kavehfaghani/Uni/project/hopebox/build/firebase_core/intermediates/library_manifest/debug/AndroidManifest.xml:11:17-82
 72            <meta-data
 72-->[com.google.android.gms:play-services-measurement-api:17.2.0] /Users/kavehfaghani/.gradle/caches/transforms-2/files-2.1/95cc13d8ab29f0c79f0ab230dd33b52b/play-services-measurement-api-17.2.0/AndroidManifest.xml:30:13-32:85
 73                android:name="com.google.firebase.components:com.google.firebase.analytics.connector.internal.AnalyticsConnectorRegistrar"
@@ -133,17 +133,17 @@
 80                android:value="com.google.firebase.components.ComponentRegistrar" />
 80-->[com.google.firebase:firebase-firestore:19.0.0] /Users/kavehfaghani/.gradle/caches/transforms-2/files-2.1/3307637377ab6877be47bf4884ebc822/jetified-firebase-firestore-19.0.0/AndroidManifest.xml:20:17-82
 81            <meta-data
-81-->[com.google.firebase:firebase-database:17.0.0] /Users/kavehfaghani/.gradle/caches/transforms-2/files-2.1/8a9dd64f7b51c5f650090741b9ff7b10/jetified-firebase-database-17.0.0/AndroidManifest.xml:30:13-32:85
-82                android:name="com.google.firebase.components:com.google.firebase.database.DatabaseRegistrar"
-82-->[com.google.firebase:firebase-database:17.0.0] /Users/kavehfaghani/.gradle/caches/transforms-2/files-2.1/8a9dd64f7b51c5f650090741b9ff7b10/jetified-firebase-database-17.0.0/AndroidManifest.xml:31:17-109
+81-->[com.google.firebase:firebase-iid:19.0.0] /Users/kavehfaghani/.gradle/caches/transforms-2/files-2.1/93953bb03b8b2d8baddb97e673aea636/firebase-iid-19.0.0/AndroidManifest.xml:32:13-34:85
+82                android:name="com.google.firebase.components:com.google.firebase.iid.Registrar"
+82-->[com.google.firebase:firebase-iid:19.0.0] /Users/kavehfaghani/.gradle/caches/transforms-2/files-2.1/93953bb03b8b2d8baddb97e673aea636/firebase-iid-19.0.0/AndroidManifest.xml:33:17-96
 83                android:value="com.google.firebase.components.ComponentRegistrar" />
-83-->[com.google.firebase:firebase-database:17.0.0] /Users/kavehfaghani/.gradle/caches/transforms-2/files-2.1/8a9dd64f7b51c5f650090741b9ff7b10/jetified-firebase-database-17.0.0/AndroidManifest.xml:32:17-82
+83-->[com.google.firebase:firebase-iid:19.0.0] /Users/kavehfaghani/.gradle/caches/transforms-2/files-2.1/93953bb03b8b2d8baddb97e673aea636/firebase-iid-19.0.0/AndroidManifest.xml:34:17-82
 84            <meta-data
-84-->[com.google.firebase:firebase-iid:19.0.0] /Users/kavehfaghani/.gradle/caches/transforms-2/files-2.1/93953bb03b8b2d8baddb97e673aea636/firebase-iid-19.0.0/AndroidManifest.xml:32:13-34:85
-85                android:name="com.google.firebase.components:com.google.firebase.iid.Registrar"
-85-->[com.google.firebase:firebase-iid:19.0.0] /Users/kavehfaghani/.gradle/caches/transforms-2/files-2.1/93953bb03b8b2d8baddb97e673aea636/firebase-iid-19.0.0/AndroidManifest.xml:33:17-96
+84-->[com.google.firebase:firebase-database:17.0.0] /Users/kavehfaghani/.gradle/caches/transforms-2/files-2.1/8a9dd64f7b51c5f650090741b9ff7b10/jetified-firebase-database-17.0.0/AndroidManifest.xml:30:13-32:85
+85                android:name="com.google.firebase.components:com.google.firebase.database.DatabaseRegistrar"
+85-->[com.google.firebase:firebase-database:17.0.0] /Users/kavehfaghani/.gradle/caches/transforms-2/files-2.1/8a9dd64f7b51c5f650090741b9ff7b10/jetified-firebase-database-17.0.0/AndroidManifest.xml:31:17-109
 86                android:value="com.google.firebase.components.ComponentRegistrar" />
-86-->[com.google.firebase:firebase-iid:19.0.0] /Users/kavehfaghani/.gradle/caches/transforms-2/files-2.1/93953bb03b8b2d8baddb97e673aea636/firebase-iid-19.0.0/AndroidManifest.xml:34:17-82
+86-->[com.google.firebase:firebase-database:17.0.0] /Users/kavehfaghani/.gradle/caches/transforms-2/files-2.1/8a9dd64f7b51c5f650090741b9ff7b10/jetified-firebase-database-17.0.0/AndroidManifest.xml:32:17-82
 87        </service>
 88
 89        <receiver
