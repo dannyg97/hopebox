@@ -3,9 +3,16 @@ import 'package:flutter/material.dart';
 import 'authentication.dart';
 
 class LoginSignupPage extends StatefulWidget {
-  LoginSignupPage({this.auth, this.loginCallback});
+  LoginSignupPage({
+    this.auth,
+    this.login,
+    this.loginCallback,
+  });
+
+  final bool login;
   final BaseAuth auth;
   final VoidCallback loginCallback;
+
   @override
   State<StatefulWidget> createState() => new _LoginSignupPageState();
 }
@@ -17,7 +24,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
   String _password;
   String _errorMessage;
 
-    bool _isLoginForm;
+  bool _isLoginForm;
   bool _isLoading;
 
   // Check if form is valid before perform login or signup
@@ -34,7 +41,8 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
   void validateAndSubmit() async {
     setState(() {
       _errorMessage = "";
-      _isLoading = true;
+      // Change later, for now it's annoying
+      _isLoading = false;
     });
     if (validateAndSave()) {
       String userId = "";
@@ -70,7 +78,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
   void initState() {
     _errorMessage = "";
     _isLoading = false;
-    _isLoginForm = true;
+    _isLoginForm = widget.login;
     super.initState();
   }
 
@@ -89,15 +97,13 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-        appBar: new AppBar(
-          title: new Text('HopeBox'),
-        ),
-        body: Stack(
-          children: <Widget>[
-            _showForm(),
-            _showCircularProgress(),
-          ],
-        ));
+      body: Stack(
+        children: <Widget>[
+          _showForm(),
+          _showCircularProgress(),
+        ],
+      ),
+    );
   }
 
   Widget _showCircularProgress() {
@@ -109,24 +115,111 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
       width: 0.0,
     );
   }
-  
+
   Widget _showForm() {
-    return new Container(
-        padding: EdgeInsets.all(16.0),
-        child: new Form(
-          key: _formKey,
-          child: new ListView(
-            shrinkWrap: true,
-            children: <Widget>[
-              showLogo(),
-              showEmailInput(),
-              showPasswordInput(),
-              showPrimaryButton(),
-              showSecondaryButton(),
-              showErrorMessage(),
-            ],
-          ),
-        ));
+    return new Scaffold(
+        body: new Form(
+            key: _formKey,
+            child: new Stack(
+              children: <Widget>[
+                Container(
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage('assets/image1.png'),
+                          fit: BoxFit.fitWidth,
+                          alignment: Alignment.topCenter)),
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  margin: EdgeInsets.only(top: 250),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30),
+                    color: Colors.white,
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(23),
+                    child: ListView(
+                      children: <Widget>[
+                        Center(
+                          child: Padding(
+                            padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
+                            child: Text(
+                              _isLoginForm
+                                  ? 'Welcome back!'
+                                  : 'Glad to have you with us!\n\nWhy don\'t you start us off with your email and password?',
+                              style: TextStyle(
+                                fontSize: 16,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
+                          child: Container(
+                            color: Color(0xfff5f5f5),
+                            child: TextFormField(
+                              maxLines: 1,
+                              keyboardType: TextInputType.emailAddress,
+                              validator: (value) => value.isEmpty
+                                  ? 'Email can\'t be empty'
+                                  : null,
+                              onSaved: (value) => _email = value.trim(),
+                              style: TextStyle(
+                                  color: Colors.black, fontFamily: 'Arial'),
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: 'Email',
+                                  prefixIcon: Icon(Icons.mail),
+                                  labelStyle: TextStyle(fontSize: 15)),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          color: Color(0xfff5f5f5),
+                          child: TextFormField(
+                            obscureText: true,
+                            maxLines: 1,
+                            style: TextStyle(
+                                color: Colors.black, fontFamily: 'Arial'),
+                            decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: 'Password',
+                                prefixIcon: Icon(Icons.lock_outline),
+                                labelStyle: TextStyle(fontSize: 15)),
+                            validator: (value) => value.isEmpty
+                                ? 'Password can\'t be empty'
+                                : null,
+                            onSaved: (value) => _password = value.trim(),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 20),
+                          child: MaterialButton(
+                            onPressed: validateAndSubmit,
+                            child: Text(
+                              _isLoginForm ? 'LOGIN' : 'CREATE A NEW ACCOUNT',
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontFamily: 'Arial',
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            color: Color(0xffff2d55),
+                            elevation: 0,
+                            minWidth: 400,
+                            height: 50,
+                            textColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            )));
   }
 
   Widget showErrorMessage() {
@@ -147,22 +240,19 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
   }
 
   Widget showLogo() {
-    String logoString = "HOPE ❤️ BOX";
+    String logoString = "HOPE  BOX";
     return new Hero(
       tag: 'hero',
       child: Padding(
-        padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 0.0),
-        child: Center(
-          child: new Text(
-          // child: Image.asset('assets/hopebox.png'),
-            logoString,
-            style: TextStyle(
-              fontSize: 40.0, 
-              decorationColor: Colors.blue,
-              height: 2),
-        ),
-        )
-      ),
+          padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 0.0),
+          child: Center(
+            child: new Text(
+              // child: Image.asset('assets/hopebox.png'),
+              logoString,
+              style: TextStyle(
+                  fontSize: 40.0, decorationColor: Colors.blue, height: 2),
+            ),
+          )),
     );
   }
 
@@ -226,6 +316,6 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
                 style: new TextStyle(fontSize: 20.0, color: Colors.white)),
             onPressed: validateAndSubmit,
           ),
-    ));
+        ));
   }
 }

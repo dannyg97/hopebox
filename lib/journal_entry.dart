@@ -1,67 +1,60 @@
-// Flutter code sample for
-
-// This example shows a [Form] with one [TextFormField] and a [RaisedButton]. A
-// [GlobalKey] is used here to identify the [Form] and validate input.
-
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:my_app/registration/authentication.dart';
-//import 'package:path_provider/path_provider.dart';
-import 'date_time_helper.dart';
+import 'registration/authentication.dart';
 import 'package:my_app/fire_base_helper.dart';
 import 'package:my_app/sentiment_analysis_helper.dart';
 import 'package:my_app/api_base_helper.dart';
 import 'package:http/http.dart';
+import 'date_time_helper.dart';
+import 'package:gradient_app_bar/gradient_app_bar.dart';
 
-// void main() => runApp(JournalEntry());
-
-/*
- TODO:
- Test the functionality of:
-   [DONE] Writing anything should 'echo' inside the textbox
-   [DONE] Tapping the save button should: save and erase what is currently on the screen
- Ideally:
-  Have a basic journal entry page that lists all entries (O.K. if just one)
-  [column]
-  |-[curved square]
-      |-[text]
- */
 /// This Widget is the main application widget.
 class JournalEntry extends StatelessWidget {
-  JournalEntry({Key key, this.auth, this.userId, this.logoutCallback})
+  JournalEntry(
+      {Key key,
+      this.auth,
+      this.userId,
+      this.logoutCallback,
+      this.isSentimentAnalysisEnabled})
       : super(key: key);
 
   final BaseAuth auth;
   final String userId;
   final VoidCallback logoutCallback;
-  static const String _title = 'What\'s on your mind?';  final FireBaseHelper _fireBaseHelper = FireBaseHelper();
+  final bool isSentimentAnalysisEnabled;
+  final FireBaseHelper _fireBaseHelper = FireBaseHelper();
 
-  bool debugShowCheckedModeBanner = false;
+  final bool debugShowCheckedModeBanner = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text("$_title"),
-      // ),
       body: Stack(
         children: <Widget>[
-          MyStatefulWidget(auth: this.auth, userId: this.userId, logoutCallback: this.logoutCallback,),
+          MyStatefulWidget(
+            auth: this.auth,
+            userId: this.userId,
+            logoutCallback: this.logoutCallback,
+            isSentimentAnalysisEnabled: this.isSentimentAnalysisEnabled,
+          ),
         ],
-      )
+      ),
     );
   }
 }
 
-
-
-
 class MyStatefulWidget extends StatefulWidget {
-  MyStatefulWidget({Key key, this.auth, this.userId, this.logoutCallback})
+  MyStatefulWidget(
+      {Key key,
+      this.auth,
+      this.userId,
+      this.logoutCallback,
+      this.isSentimentAnalysisEnabled})
       : super(key: key);
   final BaseAuth auth;
   final String userId;
   final VoidCallback logoutCallback;
+  final bool isSentimentAnalysisEnabled;
 
   @override
   _MyStatefulWidgetState createState() => _MyStatefulWidgetState();
@@ -73,12 +66,40 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   final FireBaseHelper _fireBaseHelper = FireBaseHelper();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   DateTimeHelper _dateTimeHelper = new DateTimeHelper();
-  SentimentAnalysisHelper _sentimentAnalysisHelper = SentimentAnalysisHelper(ApiBaseHelper(Client()));
-  Query _todoQuery;
+  SentimentAnalysisHelper _sentimentAnalysisHelper =
+      SentimentAnalysisHelper(ApiBaseHelper(Client()));
+  bool _isEnabled;
+  String _journalEntry;
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
+    initialiseJournalEntry();
+    myController.addListener(_updateDoneIconEnabledState);
+    _isEnabled = true;
+  }
+
+  void initialiseJournalEntry() {
+    _fireBaseHelper
+        .getJournalEntry(widget.userId, _dateTimeHelper.getCurrDateTime())
+        .then(
+      (journalEntry) {
+        setState(
+          () {
+            _journalEntry = journalEntry;
+            myController.text = _journalEntry;
+          },
+        );
+      },
+    );
+  }
+
+  _updateDoneIconEnabledState() {
+    setState(
+      () {
+        _isEnabled = myController.text.isNotEmpty ? true : false;
+      },
+    );
   }
 
   @override
@@ -87,148 +108,76 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     super.dispose();
   }
 
-  updateJournalEntry(String journal){
-    if(journal.length>0) {
-      _fireBaseHelper.addJournalEntry(widget.userId, _dateTimeHelper.getCurrDateTime(), journal.toString());
-      _sentimentAnalysisHelper.analyseTextSentiment(journal.toString()).then((score) {
-        print("score is $score");
-        _fireBaseHelper.addMood(widget.userId, _dateTimeHelper.getCurrDateTime(), score);
-      });
+  updateJournalEntry(String journal) async {
+    _fireBaseHelper.addJournalEntry(
+        widget.userId, _dateTimeHelper.getCurrDateTime(), journal.toString());
+
+    if (widget.isSentimentAnalysisEnabled) {
+      await _sentimentAnalysisHelper
+          .analyseTextSentiment(journal.toString())
+          .then(
+        (score) {
+          _fireBaseHelper
+              .addMood(widget.userId, _dateTimeHelper.getCurrDateTime(), score)
+              .then(
+            (x) {
+              return;
+            },
+          );
+        },
+      );
     }
   }
 
+  getIsEnabled() {
+    return _isEnabled;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: new AppBar(
-            title: const Text("What's on your mind?"),
-            // backgroundColor: const Color(0xFFFADA5E),
-            // leading: new IconButton(icon: new Icon(Icons.arrow_back)),
-            actions: [new IconButton(icon: new Icon(Icons.done),
-                onPressed: () {
-                  var input = myController.text;
-                  myController.clear();
-                  updateJournalEntry(input.toString());
-                  Navigator.pop(context);
-                })
-            ]
-        ),
-        body: Form(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: TextField(
-                  focusNode: FocusNode(),
-                  controller: myController,
-                  keyboardType: TextInputType.multiline,
-                  maxLines: null,
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-                  decoration: InputDecoration.collapsed(
-                    hintText: 'Write about your day',
-                    hintStyle: TextStyle(
-                        color: Colors.grey.shade400,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500),
-                    border: InputBorder.none,
-                  ),
+      appBar: GradientAppBar(
+        gradient:
+            LinearGradient(colors: [Color(0xffFF7E7E), Color(0xffFCE691)]),
+        title: const Text("What's on your mind?"),
+        actions: [
+          new IconButton(
+              icon: new Icon(Icons.done),
+              onPressed: _isEnabled
+                  ? () async {
+                      var input = myController.text;
+                      myController.clear();
+                      await updateJournalEntry(input.toString());
+                      Navigator.pop(context);
+                    }
+                  : null),
+        ],
+      ),
+      body: Form(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: TextField(
+                focusNode: FocusNode(),
+                controller: myController,
+                keyboardType: TextInputType.multiline,
+                maxLines: null,
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                decoration: InputDecoration.collapsed(
+                  hintText: 'Write about your day',
+                  hintStyle: TextStyle(
+                      color: Colors.grey.shade400,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500),
+                  border: InputBorder.none,
                 ),
               ),
-              /*
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: RaisedButton(
-                    onPressed: () {
-                      // Validate will return true if the form is valid, or false if
-                      // the form is invalid.
-                      if (_formKey.currentState.validate()) {
-                        // Process data.
-                        print(_formKey.toString());
-                      }
-                    },
-                    child: Text('Submit'),
-                  ),
-                ),
-         */
-            ],
-          ),
-        ));
-  }
-}
-
-class SecondRoute extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Second Route"),
-      ),
-      body: Center(
-
-        child: RaisedButton(
-          onPressed: () {
-            Navigator.pop(context);
-            
-          },
-          child: Text('Go back!'),
+            ),
+          ],
         ),
       ),
     );
   }
 }
-
-
-//_read() async {
-//  try {
-//    final directory = await getApplicationDocumentsDirectory();
-//    final file = File('${directory.path}/my_file.txt');
-//    String text = await file.readAsString();
-//    print(text);
-//  } catch (e) {
-//    print("Couldn't read file");
-//  }
-//}
-
-
-
-
-// class _JournalEntryPageState extends State<HomePage>{
-
-//   final FirebaseDatabase _database = FirebaseDatabase.instance; 
-//   final GlobalKey<FormState> formKey = GlobalKey<FormState>(); 
-
-//   Query _todoQuery; 
-
-//   @override 
-//   void initState(){
-//     super.initState(); 
-
-//     _todoQuery = _database.reference().child('journal_entry')
-//     .orderByChild('userId').equalTo(widget.userId);
-
-//   }
-
-//   addNewJournal(String journal){
-//     if(journal.length>0){
-//       Journal journalRecord = new Journal(journal.toString(), widget.userId, true);
-//       _database.reference().child("journal_entry").push().set(journalRecord.toJson());
-//     }
-//   }
-
-//   updateNewJournal(){
-
-//   }
-
-//   deleteJournal(){
-
-//   }
-
-  
-//   @override
-//   Widget build(BuildContext context) {
-//     // TODO: implement build
-//     return null;
-//   }
-
-// }
