@@ -8,24 +8,22 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:my_app/entry_instance.dart';
-
 import 'registration/authentication.dart';
 import 'journal_entry.dart';
 import 'date_time_helper.dart';
 
 /// This Widget is the main application widget.
 class MoodEnter extends StatelessWidget {
-   MoodEnter({Key key, this.auth, this.userId, this.logoutCallback})
+  MoodEnter({Key key, this.auth, this.userId, this.logoutCallback})
       : super(key: key);
   final BaseAuth auth;
   final VoidCallback logoutCallback;
   final String userId;
-  static const String _title = 'What\'s on your mind?';
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: _title,
       home: Scaffold(
         body: MyStatefulWidget(
           auth: this.auth,
@@ -50,19 +48,28 @@ class MyStatefulWidget extends StatefulWidget {
 
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   final _formKey = GlobalKey<FormState>();
-  
+
   final FirebaseDatabase _database = FirebaseDatabase.instance;
   final FireBaseHelper _fireBaseHelper = FireBaseHelper();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
+  final _moods = {
+    -1: '',
+    0: 'awful.',
+    1: 'a bit on the bad side.',
+    2: 'neutral.',
+    3: 'happy!',
+    4: 'ecstatic!',
+  };
+
   DateTimeHelper _dateTimeHelper = new DateTimeHelper();
+
+  int _emojiColour = -1;
   List<EntryInstance> _entryInstances;
   bool _isSentimentAnalysisEnabled = false;
-  int _emojiColour = -1;
- // var string[10];
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     initialiseMood();
     initialiseSentimentAnalysisOptIn();
@@ -70,31 +77,38 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   }
 
   void initialiseMood() {
-      _fireBaseHelper.getMood(widget.userId, _dateTimeHelper.getCurrDateTime()).then((mood){
-          setState(() {
-              _emojiColour = mood;
-          });
-      });
-  }
-
-    void initialiseSentimentAnalysisOptIn() {
-      _fireBaseHelper.getIsSentimentAnalysisEnabled(widget.userId).then((isSentimentAnalysisEnabled){
-          setState(() {
-              _isSentimentAnalysisEnabled = isSentimentAnalysisEnabled;
-          });
-      });
-  }
-
-  void initialiseEntryInstances() {
-    _fireBaseHelper.getAllUserEntryInstances(widget.userId).then((entryInstances){
+    _fireBaseHelper
+        .getMood(widget.userId, _dateTimeHelper.getCurrDateTime())
+        .then((mood) {
       setState(() {
-          _entryInstances = entryInstances;
+        _emojiColour = mood;
       });
     });
   }
 
-  updateMood(int moodtype){
-    _fireBaseHelper.addMood(widget.userId, _dateTimeHelper.getCurrDateTime(), moodtype);
+  updateMood(int moodtype) {
+    _fireBaseHelper.addMood(
+        widget.userId, _dateTimeHelper.getCurrDateTime(), moodtype);
+  }
+
+  void initialiseSentimentAnalysisOptIn() {
+    _fireBaseHelper
+        .getIsSentimentAnalysisEnabled(widget.userId)
+        .then((isSentimentAnalysisEnabled) {
+      setState(() {
+        _isSentimentAnalysisEnabled = isSentimentAnalysisEnabled;
+      });
+    });
+  }
+
+  void initialiseEntryInstances() {
+    _fireBaseHelper
+        .getAllUserEntryInstances(widget.userId)
+        .then((entryInstances) {
+      setState(() {
+        _entryInstances = entryInstances;
+      });
+    });
   }
 
   void _showDialog() {
@@ -106,7 +120,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
         return AlertDialog(
           key: new Key('alert_dialog'),
           title: new Text("Sentiment Analysis Enabled"),
-          content: new Text("You've enabled our journal entry sentiment analysis feature, so your moods are being automatically detected.\n\nIn order to disable this feature, please toggle the feature off."),
+          content: new Text(
+              "You've enabled our journal entry sentiment analysis feature, so your moods are being automatically detected.\n\nIn order to disable this feature, please toggle the feature off."),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             new FlatButton(
@@ -123,261 +138,265 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
   @override
   Widget build(BuildContext context) {
+
     return new Scaffold(
       backgroundColor: Colors.white,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            new Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(top: 4.0, bottom: 80),
-                  child: new Text(
-                    "Welcome to your HopeBox",
-                    style: new TextStyle(fontSize: 30.0, color: Colors.black),
-                  ),
-                  
-                )
-              ],
+      body: Stack(
+        children: <Widget>[
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                // Where the linear gradient begins and ends
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                // Add one stop for each color. Stops should increase from 0 to 1
+                stops: [0, 1],
+                colors: [Color(0xffFCE691), Color(0xffFF7E7E)],
+              ),
             ),
-            new Row(
-              children: <Widget>[
-                new Flexible (
-                  child: new SwitchListTile(
-                    key: new Key('sentiment_analysis_switch'),
-                    value: _isSentimentAnalysisEnabled,
-                    title: const Text('Journal Entry Sentiment Analysis'),
-                    onChanged: (value) {
-                      _fireBaseHelper.addSentimentAnalysisOptInStatus(widget.userId, value);
-                      setState(() {
-                        _isSentimentAnalysisEnabled = value;
-                      });
-                    },
-                    secondary: const Icon(Icons.lightbulb_outline),
-                  )
-                )
-              ],
-            ),
-            new Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                        left: 0, right: 0, top: 10.0),
-                    child: GestureDetector(
-                      onTap: () {
-                      },
-                      child: new Container(
-                          alignment: Alignment.center,
-                          height: 60.0,
-                          decoration: new BoxDecoration(
-                              color: Color(0xFF18D191)),
-                          child: new Text("How are you feeling ? ",
-                              style: new TextStyle(
-                                  fontSize: 20.0, color: Colors.white))),
-                    ),
-                  ),
-                )
-              ],
-            ),
-            new Stack(
-                alignment: Alignment.center,
+            child: Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  new Container(
-                    height: 100.0,
-                    width: 60.0,
-                    margin: new EdgeInsets.only(right: 300.0, top: 0.0),
-                    child: new IconButton(
-                          key: new Key('very_dissatisfied'),
-                          icon: new Icon(Icons.sentiment_very_dissatisfied,
-                              size: 50,
-                              color: (_emojiColour == 0) ? Colors.red
-                              : Colors.grey,
-                    ),
-                      onPressed: () {
-                        if (_isSentimentAnalysisEnabled) {
-                          _showDialog();
-                        } else {
-                          setState(() {
-                            if(_emojiColour == 0 ){
-                            _emojiColour = -1;
-                            } else {
-                            _emojiColour = 0;
-                            }
-                          });
-                        }
-                      }
-                      ),
-
-
-                   ),
-                  new Container(
-                      height: 100.0,
-                      width: 60.0,
-                      margin: new EdgeInsets.only(right: 150.0, top: 0.0),
-                      child: new IconButton(
-                          key: new Key('dissatisfied'),
-                          icon: new Icon(
-                            Icons.sentiment_dissatisfied,
-                              size: 50,
-                              color: (_emojiColour == 1) ? Colors.deepOrangeAccent
-                              : Colors.grey,
-                      ),
-                          onPressed: () {
-                        if (_isSentimentAnalysisEnabled) {
-                          _showDialog();
-                        } else {
-                          setState(() {
-                            if(_emojiColour == 1 ){
-                            _emojiColour = -1;
-                            } else {
-                            _emojiColour = 1;
-                            }
-                          });
-                        }
-                      }
-                      )
+                  new Row(
+                    children: <Widget>[],
                   ),
-                  new Container(
-                      height: 100.0,
-                      width: 60.0,
-                      margin: new EdgeInsets.only(right: 0.0, top: 0.0),
-                      child: new IconButton(
+                  new Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              left: 0, right: 0, top: 10.0),
+                          child: GestureDetector(
+                            onTap: () {},
+                            child: new Container(
+                              alignment: Alignment.center,
+                              height: 60.0,
+                              child: new Text(
+                                "How are you feeling today?",
+                                style: new TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 30,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                  new Padding(
+                    padding: EdgeInsets.only(top: 10),
+                    child: Text(
+                      "I'm feeling... ${_moods[_emojiColour]}",
+                      style: new TextStyle(
+                        fontStyle: FontStyle.italic,
+                        fontSize: 17,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  new Stack(
+                    alignment: Alignment.center,
+                    children: <Widget>[
+                      new Container(
+                        height: 100.0,
+                        width: 60.0,
+                        margin: new EdgeInsets.only(right: 250.0, top: 0.0),
+                        child: new IconButton(
+                            key: new Key('very_dissatisfied'),
+                            icon: new Icon(
+                              Icons.sentiment_very_dissatisfied,
+                              size: 50,
+                              color: (_emojiColour == 0)
+                                  ? Colors.red
+                                  : Colors.white,
+                            ),
+                            onPressed: () {
+                              if (_isSentimentAnalysisEnabled) {
+                                _showDialog();
+                              } else {
+                                setState(() {
+                                  if (_emojiColour == 0) {
+                                    _emojiColour = -1;
+                                  } else {
+                                    _emojiColour = 0;
+                                  }
+                                });
+                              }
+                            }),
+                      ),
+                      new Container(
+                          height: 100.0,
+                          width: 60.0,
+                          margin: new EdgeInsets.only(right: 125.0, top: 0.0),
+                          child: new IconButton(
+                              key: new Key('dissatisfied'),
+                              icon: new Icon(
+                                Icons.sentiment_dissatisfied,
+                                size: 50,
+                                color: (_emojiColour == 1)
+                                    ? Colors.deepOrangeAccent
+                                    : Colors.white,
+                              ),
+                              onPressed: () {
+                                if (_isSentimentAnalysisEnabled) {
+                                  _showDialog();
+                                } else {
+                                  setState(() {
+                                    if (_emojiColour == 1) {
+                                      _emojiColour = -1;
+                                    } else {
+                                      _emojiColour = 1;
+                                    }
+                                  });
+                                }
+                              })),
+                      new Container(
+                        height: 100.0,
+                        width: 60.0,
+                        margin: new EdgeInsets.only(right: 0.0, top: 0.0),
+                        child: new IconButton(
                           key: new Key('neutral'),
                           icon: new Icon(
-                              Icons.sentiment_neutral,
-                              size: 50,
-                              color: (_emojiColour == 2) ? Colors.amber
-                              : Colors.grey,
-                      ),
-                          onPressed: () {
-                        if (_isSentimentAnalysisEnabled) {
-                          _showDialog();
-                        } else {
-                          setState(() {
-                            if(_emojiColour == 2){
-                            _emojiColour = -1;
-                            } else {
-                            _emojiColour = 2;
-                            }
-                          });
-                        }
-                      }
-                      )
-                  ),
-                  new Container(
-                      height: 100.0,
-                      width: 60.0,
-                      margin: new EdgeInsets.only(left: 150.0, top: 0.0),
-                      child: new IconButton(
-                          key: new Key('satisfied'),
-                          icon: new Icon(Icons.sentiment_satisfied, size: 50,
-                            color: (_emojiColour == 3) ? Colors.greenAccent
-                                : Colors.grey,
+                            Icons.sentiment_neutral,
+                            size: 50,
+                            color: (_emojiColour == 2)
+                                ? Colors.yellowAccent
+                                : Colors.white,
                           ),
                           onPressed: () {
-                        if (_isSentimentAnalysisEnabled) {
-                          _showDialog();
-                        } else {
-                          setState(() {
-                            if(_emojiColour == 3 ){
-                            _emojiColour = -1;
+                            if (_isSentimentAnalysisEnabled) {
+                              _showDialog();
                             } else {
-                            _emojiColour = 3;
+                              setState(
+                                () {
+                                  if (_emojiColour == 2) {
+                                    _emojiColour = -1;
+                                  } else {
+                                    _emojiColour = 2;
+                                  }
+                                },
+                              );
                             }
-                          });
-                        }
-                      }
-                      )
-                  ),
-                  new Container(
-                      height: 100.0,
-                      width: 60.0,
-                      margin: new EdgeInsets.only(left: 300.0, top: 0.0),
-                      child: new IconButton(
-                          key: new Key('very_satisfied'),
-                          icon: new Icon(Icons.sentiment_very_satisfied, size: 50,
-                              color: (_emojiColour == 4) ? Colors.green
-                              : Colors.grey,
+                          },
+                        ),
                       ),
+                      new Container(
+                        height: 100.0,
+                        width: 60.0,
+                        margin: new EdgeInsets.only(left: 125.0, top: 0.0),
+                        child: new IconButton(
+                          key: new Key('satisfied'),
+                          icon: new Icon(
+                            Icons.sentiment_satisfied,
+                            size: 50,
+                            color: (_emojiColour == 3)
+                                ? Colors.lightGreenAccent
+                                : Colors.white,
+                          ),
                           onPressed: () {
-                        if (_isSentimentAnalysisEnabled) {
-                          _showDialog();
-                        } else {
-                          setState(() {
-                            if(_emojiColour == 4 ){
-                            _emojiColour = -1;
+                            if (_isSentimentAnalysisEnabled) {
+                              _showDialog();
                             } else {
-                            _emojiColour = 4;
+                              setState(() {
+                                if (_emojiColour == 3) {
+                                  _emojiColour = -1;
+                                } else {
+                                  _emojiColour = 3;
+                                }
+                              });
                             }
-                          });
-                        }
-                      }
-                      )
-                  )
-                
-                ]
-            ),
-            new Row(
-              children: <Widget>[
-                Center(
-                  child: RaisedButton(
-                    child: new Icon(Icons.arrow_forward),
-                    onPressed: (){
+                          },
+                        ),
+                      ),
+                      new Container(
+                          height: 100.0,
+                          width: 60.0,
+                          margin: new EdgeInsets.only(left: 250.0, top: 0.0),
+                          child: new IconButton(
+                              key: new Key('very_satisfied'),
+                              icon: new Icon(
+                                Icons.sentiment_very_satisfied,
+                                size: 50,
+                                color: (_emojiColour == 4)
+                                    ? Colors.greenAccent
+                                    : Colors.white,
+                              ),
+                              onPressed: () {
+                                if (_isSentimentAnalysisEnabled) {
+                                  _showDialog();
+                                } else {
+                                  setState(() {
+                                    if (_emojiColour == 4) {
+                                      _emojiColour = -1;
+                                    } else {
+                                      _emojiColour = 4;
+                                    }
+                                  });
+                                }
+                              })),
+                    ],
+                  ),
+                  new RaisedButton(
+                    color: Colors.red,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(18.0),
+                        side: BorderSide(color: Colors.red)),
+                    child: new Icon(Icons.arrow_forward, color: Colors.white),
+                    onPressed: () {
                       updateMood(_emojiColour);
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => JournalEntry(
-                            auth: widget.auth, 
-                            userId: widget.userId, 
-                            logoutCallback: widget.logoutCallback,
-                            isSentimentAnalysisEnabled: _isSentimentAnalysisEnabled
-                          )
+                        MaterialPageRoute(
+                          builder: (context) => JournalEntry(
+                              auth: widget.auth,
+                              userId: widget.userId,
+                              logoutCallback: widget.logoutCallback,
+                              isSentimentAnalysisEnabled:
+                                  _isSentimentAnalysisEnabled),
                         ),
-                      ).then((value) {
+                      ).then(
+                        (value) {
                           initialiseMood();
-                      });
+                        },
+                      );
                     },
                   ),
-                )
-              ],
-            )
-          ],
-
-        ),
+                  new Row(
+                    children: <Widget>[
+                      new Flexible(
+                        child: new SwitchListTile(
+                          key: new Key('sentiment_analysis_switch'),
+                          value: _isSentimentAnalysisEnabled,
+                          title: const Text(
+                            'Journal Entry Sentiment Analysis',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          onChanged: (value) {
+                            _fireBaseHelper.addSentimentAnalysisOptInStatus(
+                                widget.userId, value);
+                            setState(
+                              () {
+                                _isSentimentAnalysisEnabled = value;
+                              },
+                            );
+                          },
+                          secondary: const Icon(Icons.lightbulb_outline, color: Colors.white),
+                          activeColor: Color(0xffff2d55),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
-
   }
-}
-
-class SecondRoute extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Second Route"),
-      ),
-      body: Center(
-
-        child: RaisedButton(
-          onPressed: () {
-            Navigator.pop(context);
-            
-          },
-          child: Text('Go back!'),
-          
-        ),
-      ),
-    );
-  }
-}
-
-_save(int mood){
-  //save mood to the database 
-
-
 }
