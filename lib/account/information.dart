@@ -1,34 +1,32 @@
 import 'package:flutter/material.dart';
 
 class AccountPage extends StatelessWidget {
+
+  // AccountPage({Key key, this.auth, this.userId, this.logoutCallback})
+  //     : super(key: key);
+  // final BaseAuth auth;
+  // final VoidCallback logoutCallback;
+  // final String userId;
+  
+  
+  // signOut() async {
+  //   try {
+  //     await widget.auth.signOut();
+  //     widget.logoutCallback();
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(color: Colors.white),
-      child: Column(
-       children: <Widget>[
-         Padding(
-           padding: EdgeInsets.all(20.0),
-         ),
-         Align(
-          alignment: Alignment(0.0, -0.8),
-          child: Avator(),
-        ),
-        Padding(
-           padding: EdgeInsets.only(top: 30.0),
-           child: Text(
-             'FirstName LastName',
-             style: TextStyle(
-               fontSize: 20,
-               fontWeight: FontWeight.bold,
-               color: Colors.blue,
-             ),
-           ),
-         ),
-
-       ],
-
-      )
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Personal info'),
+      ),
+      body: Container(
+        child: Text("hello")   
+      ),
     );
   }
 }
@@ -43,4 +41,4 @@ Widget Avator()=>Stack (
         ),
 
       ],
-    );
+);
