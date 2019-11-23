@@ -5,10 +5,8 @@ import 'datasets/todo.dart';
 import 'dart:async';
 import './account/information.dart';
 import './mood_entry.dart';
-import './calendar.dart';
-import './analysis/analysis.dart';
 import './history/history.dart';
-
+import './analysis/analysis.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.auth, this.userId, this.logoutCallback})
@@ -221,10 +219,14 @@ static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWei
       case 0:
         return showTodoList();
       case 1:
+<<<<<<< HEAD
         print('sidfjslkdfjslkdfjlsd fjlksdfj');
 
         return new AccountPage();
         //return new HistoryPage(auth: widget.auth, userId: widget.userId, logoutCallback: widget.logoutCallback);
+=======
+        return new HistoryPage(); 
+>>>>>>> parent of caadb69... Merge branch 'master' of github.com:dannyg97/hopebox
       case 2: 
         return new AnalysisPage(auth: widget.auth, userId: widget.userId, logoutCallback: widget.logoutCallback); 
       case 3:

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import 'dart:math';
 
 import 'package:charts_flutter/flutter.dart';
@@ -18,18 +19,15 @@ import 'dart:io';
 
 
 
+=======
+import 'package:flutter/material.dart';
+>>>>>>> parent of caadb69... Merge branch 'master' of github.com:dannyg97/hopebox
 
 class HistoryPage extends StatelessWidget {
-  HistoryPage({Key key, this.auth, this.userId, this.logoutCallback})
-      : super(key: key);
-
-  final BaseAuth auth;
-  final VoidCallback logoutCallback;
-  final String userId;
-
-
+  
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
     return MaterialApp(
       title: 'Your History',
       theme: ThemeData(
@@ -377,17 +375,23 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       ),
       width: 16.0,
       height: 16.0,
+=======
+    return Container(
+      decoration: BoxDecoration(color: Colors.white),
+>>>>>>> parent of caadb69... Merge branch 'master' of github.com:dannyg97/hopebox
       child: Center(
         child: Text(
-          '${events.length}',
-          style: TextStyle().copyWith(
-            color: Colors.white,
-            fontSize: 12.0,
+          'History',
+          textDirection: TextDirection.ltr,
+          style: TextStyle(
+            fontSize: 32,
+            color: Colors.black87,
           ),
         ),
       ),
     );
   }
+<<<<<<< HEAD
 
   Widget _buildHolidaysMarker() {
     return Icon(
@@ -464,7 +468,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
           .toList(),
     );
   }
+=======
+>>>>>>> parent of caadb69... Merge branch 'master' of github.com:dannyg97/hopebox
 }
-
-
 
