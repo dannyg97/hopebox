@@ -56,7 +56,7 @@ class Start extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    RootPage(auth: new Auth())));
+                                    RootPage(auth: new Auth(), login: false)));
                       },
                       child: Text(
                         'LET\'S START!',
@@ -84,7 +84,7 @@ class Start extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    RootPage(auth: new Auth())));
+                                    RootPage(auth: new Auth(), login: true)));
                       },
                       child: new Text(
                         'I ALREADY HAVE AN ACCOUNT',

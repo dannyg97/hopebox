@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'authentication.dart';
 
 class LoginSignupPage extends StatefulWidget {
-  LoginSignupPage({this.auth, this.loginCallback});
+  LoginSignupPage({this.auth, this.login, this.loginCallback, });
 
+  final bool login;
   final BaseAuth auth;
   final VoidCallback loginCallback;
 
@@ -73,7 +74,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
   void initState() {
     _errorMessage = "";
     _isLoading = false;
-    _isLoginForm = true;
+    _isLoginForm = widget.login;
     super.initState();
   }
 
@@ -182,7 +183,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
                           child: MaterialButton(
                             onPressed: validateAndSubmit,
                             child: Text(
-                              'SIGN IN',
+                              _isLoginForm ? 'LOGIN' : 'CREATE A NEW ACCOUNT',
                               style: TextStyle(
                                 fontSize: 15,
                                 fontFamily: 'Arial',
@@ -204,9 +205,10 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
                             child: Text(
                               'Forgot your password?',
                               style: TextStyle(
-                                  fontFamily: 'Arial',
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold),
+                                fontFamily: 'Arial',
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         )

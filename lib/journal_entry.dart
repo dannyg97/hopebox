@@ -1,4 +1,3 @@
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'registration/authentication.dart';
@@ -8,7 +7,6 @@ import 'package:my_app/api_base_helper.dart';
 import 'package:http/http.dart';
 import 'date_time_helper.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
-//import 'package:path_provider/path_provider.dart';
 
 /// This Widget is the main application widget.
 class JournalEntry extends StatelessWidget {
@@ -23,10 +21,9 @@ class JournalEntry extends StatelessWidget {
   final String userId;
   final VoidCallback logoutCallback;
   final bool isSentimentAnalysisEnabled;
-  static const String _title = 'What\'s on your mind?';
   final FireBaseHelper _fireBaseHelper = FireBaseHelper();
 
-  bool debugShowCheckedModeBanner = false;
+  final bool debugShowCheckedModeBanner = false;
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +52,7 @@ class MyStatefulWidget extends StatefulWidget {
   final BaseAuth auth;
   final String userId;
   final VoidCallback logoutCallback;
-  bool isSentimentAnalysisEnabled;
+  final bool isSentimentAnalysisEnabled;
 
   @override
   _MyStatefulWidgetState createState() => _MyStatefulWidgetState();
@@ -69,7 +66,6 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   DateTimeHelper _dateTimeHelper = new DateTimeHelper();
   SentimentAnalysisHelper _sentimentAnalysisHelper =
   SentimentAnalysisHelper(ApiBaseHelper(Client()));
-  Query _todoQuery;
   bool _isEnabled;
   String _journalEntry;
 
@@ -154,7 +150,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
               }
                   : null)
         ],
-      ),
+      ),  
       body: Form(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
