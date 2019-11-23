@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "/Users/kavehfaghani/Uni/project/hopebox/build/app/intermediates/incremental/mergeDebugResources/merged.dir/values-en-rXC/values-en-rXC.xml",
+            "outputFile": "C:\\Users\\Chibi\\hopebox\\build\\app\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-en-rXC\\values-en-rXC.xml",
             "map": [
                 {
-                    "source": "/Users/kavehfaghani/.gradle/caches/transforms-2/files-2.1/2761ef62e3deceb012fa0a60eb7260c2/core-1.0.0/res/values-en-rXC/values-en-rXC.xml",
+                    "source": "C:\\Users\\Chibi\\.gradle\\caches\\transforms-2\\files-2.1\\2761ef62e3deceb012fa0a60eb7260c2\\core-1.0.0\\res\\values-en-rXC\\values-en-rXC.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

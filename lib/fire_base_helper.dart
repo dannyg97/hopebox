@@ -15,7 +15,6 @@ class FireBaseHelper {
             EntryInstance entryInstance = new EntryInstance(date, journalEntry, mood);
             entryInstances.add(entryInstance);
         }
-
         return entryInstances;
     }
 

@@ -280,18 +280,9 @@ class _HomePageState extends State<HomePage> {
       case 0:
         return showTodoList();
       case 1:
-<<<<<<< HEAD
         return new HistoryPage(auth: widget.auth, userId: widget.userId, logoutCallback: widget.logoutCallback);
       case 2: 
-        return new AnalysisPage(auth: widget.auth, userId: widget.userId, logoutCallback: widget.logoutCallback); 
-=======
-        return new HistoryPage();
-      case 2:
-        return new AnalysisPage(
-            auth: widget.auth,
-            userId: widget.userId,
-            logoutCallback: widget.logoutCallback);
->>>>>>> master
+        return new AnalysisPage(auth: widget.auth, userId: widget.userId, logoutCallback: widget.logoutCallback);
       case 3:
         return new AccountPage();
         break;

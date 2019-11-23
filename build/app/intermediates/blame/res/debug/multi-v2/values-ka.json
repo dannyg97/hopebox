@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "/Users/kavehfaghani/Uni/project/hopebox/build/app/intermediates/incremental/mergeDebugResources/merged.dir/values-ka/values-ka.xml",
+            "outputFile": "C:\\Users\\Chibi\\hopebox\\build\\app\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-ka\\values-ka.xml",
             "map": [
                 {
-                    "source": "/Users/kavehfaghani/.gradle/caches/transforms-2/files-2.1/16d7ac999d1145d1d74a2074313c0308/jetified-play-services-basement-17.0.0/res/values-ka/values.xml",
+                    "source": "C:\\Users\\Chibi\\.gradle\\caches\\transforms-2\\files-2.1\\19f8c44ce941e10be63836aed78090b1\\jetified-play-services-basement-17.0.0\\res\\values-ka\\values.xml",
                     "from": {
                         "startLines": "4",
                         "startColumns": "0",
@@ -21,7 +21,7 @@
                     }
                 },
                 {
-                    "source": "/Users/kavehfaghani/.gradle/caches/transforms-2/files-2.1/2761ef62e3deceb012fa0a60eb7260c2/core-1.0.0/res/values-ka/values-ka.xml",
+                    "source": "C:\\Users\\Chibi\\.gradle\\caches\\transforms-2\\files-2.1\\2761ef62e3deceb012fa0a60eb7260c2\\core-1.0.0\\res\\values-ka\\values-ka.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
@@ -38,7 +38,7 @@
                     }
                 },
                 {
-                    "source": "/Users/kavehfaghani/.gradle/caches/transforms-2/files-2.1/f6765df619a7c8c9ace6baacaf51c8ef/play-services-base-17.0.0/res/values-ka/values.xml",
+                    "source": "C:\\Users\\Chibi\\.gradle\\caches\\transforms-2\\files-2.1\\f6765df619a7c8c9ace6baacaf51c8ef\\play-services-base-17.0.0\\res\\values-ka\\values.xml",
                     "from": {
                         "startLines": "4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20",
                         "startColumns": "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0",

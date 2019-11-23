@@ -23,13 +23,8 @@ class JournalEntry extends StatelessWidget {
   final VoidCallback logoutCallback;
   final bool isSentimentAnalysisEnabled;
   final FireBaseHelper _fireBaseHelper = FireBaseHelper();
-<<<<<<< HEAD
-  bool debugShowCheckedModeBanner = false;
-=======
-
   final bool debugShowCheckedModeBanner = false;
 
->>>>>>> master
   @override
   Widget build(BuildContext context) {
     return Scaffold(
