@@ -10,11 +10,12 @@ import 'package:gradient_app_bar/gradient_app_bar.dart';
 
 /// This Widget is the main application widget.
 class JournalEntry extends StatelessWidget {
-  JournalEntry({Key key,
-    this.auth,
-    this.userId,
-    this.logoutCallback,
-    this.isSentimentAnalysisEnabled})
+  JournalEntry(
+      {Key key,
+      this.auth,
+      this.userId,
+      this.logoutCallback,
+      this.isSentimentAnalysisEnabled})
       : super(key: key);
 
   final BaseAuth auth;
@@ -43,11 +44,12 @@ class JournalEntry extends StatelessWidget {
 }
 
 class MyStatefulWidget extends StatefulWidget {
-  MyStatefulWidget({Key key,
-    this.auth,
-    this.userId,
-    this.logoutCallback,
-    this.isSentimentAnalysisEnabled})
+  MyStatefulWidget(
+      {Key key,
+      this.auth,
+      this.userId,
+      this.logoutCallback,
+      this.isSentimentAnalysisEnabled})
       : super(key: key);
   final BaseAuth auth;
   final String userId;
@@ -65,7 +67,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   DateTimeHelper _dateTimeHelper = new DateTimeHelper();
   SentimentAnalysisHelper _sentimentAnalysisHelper =
-  SentimentAnalysisHelper(ApiBaseHelper(Client()));
+      SentimentAnalysisHelper(ApiBaseHelper(Client()));
   bool _isEnabled;
   String _journalEntry;
 
@@ -81,9 +83,9 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     _fireBaseHelper
         .getJournalEntry(widget.userId, _dateTimeHelper.getCurrDateTime())
         .then(
-          (journalEntry) {
+      (journalEntry) {
         setState(
-              () {
+          () {
             _journalEntry = journalEntry;
             myController.text = _journalEntry;
           },
@@ -94,7 +96,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
   _updateDoneIconEnabledState() {
     setState(
-          () {
+      () {
         _isEnabled = myController.text.isNotEmpty ? true : false;
       },
     );
@@ -114,11 +116,11 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       await _sentimentAnalysisHelper
           .analyseTextSentiment(journal.toString())
           .then(
-            (score) {
+        (score) {
           _fireBaseHelper
               .addMood(widget.userId, _dateTimeHelper.getCurrDateTime(), score)
               .then(
-                (x) {
+            (x) {
               return;
             },
           );
@@ -135,22 +137,22 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: GradientAppBar(
-        gradient: LinearGradient(
-            colors: [Color(0xffFF7E7E), Color(0xffFCE691)]),
+        gradient:
+            LinearGradient(colors: [Color(0xffFF7E7E), Color(0xffFCE691)]),
         title: const Text("What's on your mind?"),
         actions: [
           new IconButton(
               icon: new Icon(Icons.done),
               onPressed: _isEnabled
                   ? () async {
-                var input = myController.text;
-                myController.clear();
-                await updateJournalEntry(input.toString());
-                Navigator.pop(context);
-              }
-                  : null)
+                      var input = myController.text;
+                      myController.clear();
+                      await updateJournalEntry(input.toString());
+                      Navigator.pop(context);
+                    }
+                  : null),
         ],
-      ),  
+      ),
       body: Form(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

@@ -64,8 +64,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
   DateTimeHelper _dateTimeHelper = new DateTimeHelper();
 
-  // Make emoji colour start from 0 instead of 1
-  int _emojiColour = 0;
+  int _emojiColour = -1;
   List<EntryInstance> _entryInstances;
   bool _isSentimentAnalysisEnabled = false;
 

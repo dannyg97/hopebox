@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 import 'authentication.dart';
 
 class LoginSignupPage extends StatefulWidget {
-  LoginSignupPage({this.auth, this.login, this.loginCallback, });
+  LoginSignupPage({
+    this.auth,
+    this.login,
+    this.loginCallback,
+  });
 
   final bool login;
   final BaseAuth auth;
@@ -93,12 +97,13 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-        body: Stack(
-      children: <Widget>[
-        _showForm(),
-        _showCircularProgress(),
-      ],
-    ));
+      body: Stack(
+        children: <Widget>[
+          _showForm(),
+          _showCircularProgress(),
+        ],
+      ),
+    );
   }
 
   Widget _showCircularProgress() {
@@ -136,9 +141,19 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
                     child: ListView(
                       children: <Widget>[
                         Center(
-                            child: Padding(
-                                padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
-                                child: Text('Welcome back!'))),
+                          child: Padding(
+                            padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
+                            child: Text(
+                              _isLoginForm
+                                  ? 'Welcome back!'
+                                  : 'Glad to have you with us!\n\nWhy don\'t you start us off with your email and password?',
+                              style: TextStyle(
+                                fontSize: 16,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
                         Padding(
                           padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
                           child: Container(
@@ -199,19 +214,6 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
                                 borderRadius: BorderRadius.circular(10)),
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 20),
-                          child: Center(
-                            child: Text(
-                              'Forgot your password?',
-                              style: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        )
                       ],
                     ),
                   ),
