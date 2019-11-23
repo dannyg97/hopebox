@@ -15,20 +15,16 @@ class AnalysisPage extends StatelessWidget {
   final VoidCallback logoutCallback;
   final String userId;
   FireBaseHelper fbh = new FireBaseHelper();
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
        appBar: AppBar(
+          automaticallyImplyLeading: false,
           title: const Text('Analytical Results'),
         ),
-
        body:AnalysisWidget(auth: this.auth, userId: this.userId, logoutCallback: this.logoutCallback),
     );
   }
-
-
 
 }
 
