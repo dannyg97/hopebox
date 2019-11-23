@@ -53,14 +53,14 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   final FireBaseHelper _fireBaseHelper = FireBaseHelper();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  final _moods = [
-    '',
-    'awful.',
-    'a bit on the bad side.',
-    'neutral.',
-    'happy!',
-    'ecstatic!',
-  ];
+  final _moods = {
+    -1: '',
+    0: 'awful.',
+    1: 'a bit on the bad side.',
+    2: 'neutral.',
+    3: 'happy!',
+    4: 'ecstatic!',
+  };
 
   DateTimeHelper _dateTimeHelper = new DateTimeHelper();
 
@@ -139,6 +139,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
   @override
   Widget build(BuildContext context) {
+
     return new Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
@@ -211,7 +212,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                             icon: new Icon(
                               Icons.sentiment_very_dissatisfied,
                               size: 50,
-                              color: (_emojiColour == 1)
+                              color: (_emojiColour == 0)
                                   ? Colors.red
                                   : Colors.white,
                             ),
@@ -220,10 +221,10 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                 _showDialog();
                               } else {
                                 setState(() {
-                                  if (_emojiColour == 1) {
-                                    _emojiColour = 0;
+                                  if (_emojiColour == 0) {
+                                    _emojiColour = -1;
                                   } else {
-                                    _emojiColour = 1;
+                                    _emojiColour = 0;
                                   }
                                 });
                               }
@@ -238,7 +239,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                               icon: new Icon(
                                 Icons.sentiment_dissatisfied,
                                 size: 50,
-                                color: (_emojiColour == 2)
+                                color: (_emojiColour == 1)
                                     ? Colors.deepOrangeAccent
                                     : Colors.white,
                               ),
@@ -247,10 +248,10 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                   _showDialog();
                                 } else {
                                   setState(() {
-                                    if (_emojiColour == 2) {
-                                      _emojiColour = 0;
+                                    if (_emojiColour == 1) {
+                                      _emojiColour = -1;
                                     } else {
-                                      _emojiColour = 2;
+                                      _emojiColour = 1;
                                     }
                                   });
                                 }
@@ -264,7 +265,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                           icon: new Icon(
                             Icons.sentiment_neutral,
                             size: 50,
-                            color: (_emojiColour == 3)
+                            color: (_emojiColour == 2)
                                 ? Colors.yellowAccent
                                 : Colors.white,
                           ),
@@ -274,10 +275,10 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                             } else {
                               setState(
                                 () {
-                                  if (_emojiColour == 3) {
-                                    _emojiColour = 0;
+                                  if (_emojiColour == 2) {
+                                    _emojiColour = -1;
                                   } else {
-                                    _emojiColour = 3;
+                                    _emojiColour = 2;
                                   }
                                 },
                               );
@@ -294,7 +295,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                           icon: new Icon(
                             Icons.sentiment_satisfied,
                             size: 50,
-                            color: (_emojiColour == 4)
+                            color: (_emojiColour == 3)
                                 ? Colors.lightGreenAccent
                                 : Colors.white,
                           ),
@@ -303,10 +304,10 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                               _showDialog();
                             } else {
                               setState(() {
-                                if (_emojiColour == 4) {
-                                  _emojiColour = 0;
+                                if (_emojiColour == 3) {
+                                  _emojiColour = -1;
                                 } else {
-                                  _emojiColour = 4;
+                                  _emojiColour = 3;
                                 }
                               });
                             }
@@ -322,7 +323,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                               icon: new Icon(
                                 Icons.sentiment_very_satisfied,
                                 size: 50,
-                                color: (_emojiColour == 5)
+                                color: (_emojiColour == 4)
                                     ? Colors.greenAccent
                                     : Colors.white,
                               ),
@@ -331,10 +332,10 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                   _showDialog();
                                 } else {
                                   setState(() {
-                                    if (_emojiColour == 5) {
-                                      _emojiColour = 0;
+                                    if (_emojiColour == 4) {
+                                      _emojiColour = -1;
                                     } else {
-                                      _emojiColour = 5;
+                                      _emojiColour = 4;
                                     }
                                   });
                                 }
