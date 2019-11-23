@@ -220,10 +220,13 @@ static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWei
         return showTodoList();
       case 1:
 <<<<<<< HEAD
+<<<<<<< HEAD
         return new HistoryPage();
 //        return new HistoryPage(auth: widget.auth, userId: widget.userId, logoutCallback: widget.logoutCallback);
       case 2:
 =======
+=======
+>>>>>>> parent of caadb69... Merge branch 'master' of github.com:dannyg97/hopebox
         return new HistoryPage(); 
       case 2: 
 >>>>>>> parent of caadb69... Merge branch 'master' of github.com:dannyg97/hopebox
