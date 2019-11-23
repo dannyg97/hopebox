@@ -148,8 +148,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget showTodoList() {
     if (1 == 1) {
-
-      _user.getAllUserEntryInstances(widget.userId).then((entryInstances){
+      _user.getAllUserEntryInstances(widget.userId).then((entryInstances) {
         print("=============== $entryInstances ===============");
       });
 
@@ -183,8 +182,16 @@ class _HomePageState extends State<HomePage> {
             padding: EdgeInsets.only(top: 5),
             child: MaterialButton(
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => MoodEnter()));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MoodEnter(
+                      userId: widget.userId,
+                      auth: this.widget.auth,
+                      logoutCallback: widget.logoutCallback,
+                    ),
+                  ),
+                );
               },
               child: Text(
                 'ADD A NEW ENTRY',
