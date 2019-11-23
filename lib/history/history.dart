@@ -1,5 +1,6 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'dart:math';
 
 import 'package:charts_flutter/flutter.dart';
@@ -26,11 +27,15 @@ import 'package:flutter/material.dart';
 =======
 import 'package:flutter/material.dart';
 >>>>>>> parent of caadb69... Merge branch 'master' of github.com:dannyg97/hopebox
+=======
+import 'package:flutter/material.dart';
+>>>>>>> parent of caadb69... Merge branch 'master' of github.com:dannyg97/hopebox
 
 class HistoryPage extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
     return MaterialApp(
@@ -388,6 +393,10 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     return Container(
       decoration: BoxDecoration(color: Colors.white),
 >>>>>>> parent of caadb69... Merge branch 'master' of github.com:dannyg97/hopebox
+=======
+    return Container(
+      decoration: BoxDecoration(color: Colors.white),
+>>>>>>> parent of caadb69... Merge branch 'master' of github.com:dannyg97/hopebox
       child: Center(
         child: Text(
           'History',
@@ -400,6 +409,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       ),
     );
   }
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 
@@ -478,6 +488,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
           .toList(),
     );
   }
+=======
+>>>>>>> parent of caadb69... Merge branch 'master' of github.com:dannyg97/hopebox
 =======
 >>>>>>> parent of caadb69... Merge branch 'master' of github.com:dannyg97/hopebox
 =======
