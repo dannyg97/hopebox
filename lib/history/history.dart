@@ -91,23 +91,14 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   DateTimeHelper _dateTimeHelper = new DateTimeHelper();
+
+
+
   //List<EntryInstance> _entryInstances;
 
   //String userID = MyHomePage.user_ID;
 
   int emoji;
-  List<String> _entryDates;
-  void getEntries(String userId) {
-    //print('We have entered this function');
-    _fireBaseHelper.getAllDatesWithMoodOrJournalEntries(userId).then((dates){
-      setState(() {
-        //print('Confirming this functino works');
-        print(widget.userId);
-        _entryDates = dates;
-      });
-    });
-  }
-
 
   void initialiseMood() {
     _fireBaseHelper.getMood(widget.userId, _dateTimeHelper.getCurrDateTime()).then((mood){
@@ -116,7 +107,51 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         emoji = mood;
       });
     });
+
   }
+
+  List<String> _entryDates;
+  List<int> entryYear = [];
+  List<int> entryMonth = [];
+  List<int> entryDay = [];
+
+  void getEntries(String userId) {
+    //print('We have entered this function');
+    _fireBaseHelper.getAllDatesWithMoodOrJournalEntries(userId).then((dates){
+      setState(() {
+        _entryDates = dates;
+        print(_entryDates.length);
+        for(var i = 0; i < _entryDates.length; i++) {
+          List temp = [];
+          temp = _entryDates[i].split("-");
+          entryYear.add(int.parse(temp[0]));
+          entryMonth.add(int.parse(temp[1]));
+          entryDay.add(int.parse(temp[2]));
+        }
+      });
+    });
+  }
+
+
+  /*void initialiseDates() {
+    try{
+      for(var i = 0; i < _entryDates.length; i++) {
+        print(_entryDates[i]);
+        List temp = [];
+        temp = _entryDates[i].split("-");
+        //int x = int.parse(temp[0]);
+        entryYear.add(int.parse(temp[0]));
+        entryMonth.add(int.parse(temp[1]));
+        entryDay.add(int.parse(temp[2]));
+      }
+    }
+    catch (e, s) {
+      print('Exception details:\n $e');
+      print('Stack trace:\n $s');
+    }
+
+  }*/
+
 
 
 
@@ -124,14 +159,16 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     getEntries(widget.userId);
-    initialiseMood();
+    //initialiseDates();
     print('HEY HELLO WE HERE');
     print(widget.userId);
     final _selectedDay = DateTime.now();
 
 
-    
     _events = {
+      DateTime(entryYear[0], entryMonth[0], entryDay[0]):['HIII'],
+      DateTime(2020, 12, 25): ['Christmas'],
+
       _selectedDay.subtract(Duration(days: 30)): ['Event A0', 'Event B0', 'Event C0'],
       _selectedDay.subtract(Duration(days: 27)): ['Event A1'],
       _selectedDay.subtract(Duration(days: 20)): ['Event A2', 'Event B2', 'Event C2', 'Event D2'],
@@ -139,7 +176,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       _selectedDay.subtract(Duration(days: 10)): ['Event A4', 'Event B4', 'Event C4'],
       _selectedDay.subtract(Duration(days: 4)): ['Event A5', 'Event B5', 'Event C5'],
       _selectedDay.subtract(Duration(days: 2)): ['Event A6', 'Event B6'],
-      _selectedDay: ['Event A7', 'Event B7', 'Event C7', 'Event D7'],
+     // _selectedDay: ['Event A7', 'Event B7', 'Event C7', 'Event D7'],
       _selectedDay.add(Duration(days: 1)): ['Event A8', 'Event B8', 'Event C8', 'Event D8'],
       _selectedDay.add(Duration(days: 3)): Set.from(['Event A9', 'Event A9', 'Event B9']).toList(),
       _selectedDay.add(Duration(days: 7)): ['Event A10', 'Event B10', 'Event C10'],
@@ -171,13 +208,17 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   // what happens on the day you have clicked
   void _onDaySelected(DateTime day, List events) {
-    print('We currently have the following amount of entries: ');
-    print(_entryDates.length);
-    print(widget.userId);
-    //print(emoji);
+    /*print(_entryDates.length);
     for(var i = 0; i < _entryDates.length; i++) {
       print(_entryDates[i]);
-    }
+      List temp = [];
+      temp = _entryDates[i].split("-");
+      int x = int.parse(temp[0]);
+      entryYear.add(int.parse(temp[0]));
+      entryMonth.add(int.parse(temp[1]));
+      entryDay.add(int.parse(temp[2]));
+    }*/
+
 
     setState(() {
       _selectedEvents = events;
