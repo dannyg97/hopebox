@@ -27,6 +27,7 @@ class FireBaseHelper {
             .document(userId)
             .collection("dates")
             .getDocuments().then((documentList){
+                print("date is ${userId}");
                 for (var value in documentList.documents) {
                     dates.add(value.documentID);
                 }
@@ -63,8 +64,27 @@ class FireBaseHelper {
         return mood;
     }
 
+    Future<bool> getIsSentimentAnalysisEnabled(String userId) async {
+        bool isSentimentAnalysisEnabled = false;
+        await _firestore.collection("users")
+            .document(userId)
+            .collection("userOptIns")
+            .document("isSentimentAnalysisEnabled").get().then((snapshot){
+            isSentimentAnalysisEnabled = snapshot.data["isSentimentAnalysisEnabled"];
+        });
+        return isSentimentAnalysisEnabled;
+    }
+
     void addJournalEntry(String userId, String dateTime, String journalEntry) {
         Map<String, dynamic> data = {'journal_entry':journalEntry};
+        Map<String, dynamic> date = {'date': dateTime};
+        
+        _firestore.collection("users")
+            .document(userId)
+            .collection("dates")
+            .document(dateTime)
+            .setData(date);
+            
         _firestore.collection("users")
             .document(userId)
             .collection("dates")
@@ -74,14 +94,31 @@ class FireBaseHelper {
             .setData(data);
     }
 
-    void addMood(String userId, String dateTime, int mood) {
+    Future<void> addMood(String userId, String dateTime, int mood) {
         Map<String, dynamic> data = {'mood': mood};
+        Map<String, dynamic> date = {'date': dateTime};
+        
         _firestore.collection("users")
+            .document(userId)
+            .collection("dates")
+            .document(dateTime)
+            .setData(date);
+
+        return _firestore.collection("users")
             .document(userId)
             .collection("dates")
             .document(dateTime)
             .collection("user_entries")
             .document("mood")
+            .setData(data);
+    }
+
+    void addSentimentAnalysisOptInStatus(String userId, bool isSentimentAnalysisEnabled) {
+        Map<String, dynamic> data = {'isSentimentAnalysisEnabled': isSentimentAnalysisEnabled};
+        _firestore.collection("users")
+            .document(userId)
+            .collection("userOptIns")
+            .document("isSentimentAnalysisEnabled")
             .setData(data);
     }
 }
