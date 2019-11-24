@@ -9,6 +9,7 @@ import '../mood_entry.dart';
 import '../history/history.dart';
 import '../analysis/analysis.dart';
 import 'package:fancy_bottom_navigation/fancy_bottom_navigation.dart';
+import '../past_entries/past_entries.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.auth, this.userId, this.logoutCallback})
@@ -32,8 +33,22 @@ class _HomePageState extends State<HomePage> {
   final _textEditingController = TextEditingController();
   StreamSubscription<Event> _onTodoAddedSubscription;
   StreamSubscription<Event> _onTodoChangedSubscription;
-
+  FireBaseHelper fbh = new FireBaseHelper();
+  
   Query _todoQuery;
+
+    Widget getPastEntries() {
+    
+    return FutureBuilder(
+      builder: (context, fireBaseSnap) {
+        if (fireBaseSnap.connectionState == ConnectionState.done) {
+          return PastEntries(auth: widget.auth, userId: widget.userId, logoutCallback: widget.logoutCallback, entryInstances: fireBaseSnap.data.reversed.toList());
+        }
+          return Container(width: 0.0, height: 0.0);
+        },
+      future: fbh.getAllUserEntryInstances(widget.userId),
+    );
+  }
 
   //bool _isEmailVerified = false;
 
@@ -146,110 +161,6 @@ class _HomePageState extends State<HomePage> {
         });
   }
 
-  Widget showTodoList() {
-    if (1 == 1) {
-      _user.getAllUserEntryInstances(widget.userId).then((entryInstances) {
-        print("=============== $entryInstances ===============");
-      });
-
-      final titles = [
-        'Friday 8th November',
-        'Saturday 9th November',
-        'Sunday 10th November',
-      ];
-
-      final subtitle = [
-        'I got full marks for one of my assignments today!',
-        'I went out with some friends and had a blast!',
-        'I got 20% for one of my exams...',
-      ];
-
-      final icons = [
-        Icons.sentiment_satisfied,
-        Icons.sentiment_satisfied,
-        Icons.sentiment_very_dissatisfied,
-      ];
-
-      final colors = [
-        Color(0x2eff2d55),
-        Color(0x2eff2d55),
-        Color(0x2eff2d55),
-      ];
-
-      return Column(
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(top: 5),
-            child: MaterialButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => MoodEnter(
-                      userId: widget.userId,
-                      auth: this.widget.auth,
-                      logoutCallback: widget.logoutCallback,
-                    ),
-                  ),
-                );
-              },
-              child: Text(
-                'ADD A NEW ENTRY',
-                style: TextStyle(
-                  fontSize: 15,
-                  fontFamily: 'Arial',
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              color: Color(0xffff2d55),
-              elevation: 0,
-              minWidth: 400,
-              height: 50,
-              textColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-            ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: titles.length,
-              itemBuilder: (context, index) {
-                return Card(
-                  child: Container(
-                    decoration: new BoxDecoration(
-                      color: Color(0xffffffff),
-                      border: Border.all(color: Color(0xffff2d55)),
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    child: ListTile(
-                      leading:
-                          Icon(icons[index], size: 40, color: Colors.black87),
-                      title: Text(
-                        titles[index],
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      subtitle: Text(
-                        subtitle[index],
-                        style: TextStyle(color: Colors.black87),
-                      ),
-                      contentPadding: EdgeInsets.fromLTRB(15, 10, 15, 10),
-                    ),
-                  ),
-                );
-              },
-            ),
-          )
-        ],
-      );
-    } else {
-      return MoodEnter(
-        userId: widget.userId,
-        auth: this.widget.auth,
-        logoutCallback: widget.logoutCallback,
-      );
-    }
-  }
-
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.black);
@@ -278,7 +189,7 @@ class _HomePageState extends State<HomePage> {
   _getPageWidget(int pos) {
     switch (pos) {
       case 0:
-        return showTodoList();
+        return getPastEntries();
       case 1:
         return new HistoryPage();
       case 2:
