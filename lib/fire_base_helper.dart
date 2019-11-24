@@ -3,6 +3,49 @@ import 'package:my_app/entry_instance.dart';
 
 class FireBaseHelper {
     final fs.Firestore _firestore = fs.Firestore.instance;
+    String transformMood(int mood) {
+        String returnS = '';
+        switch (mood) {
+        case 0:
+            returnS = 'You were feeling awful';
+            return returnS;
+        case 1:
+            returnS = 'You were feeling a bit on the bad side';
+            return returnS;
+        case 2:
+            returnS = 'You were feeling neutral';
+            return returnS;
+        case 3:
+            returnS = 'You were feeling happy';
+            return returnS;
+        case 4:
+            returnS = 'You were feeling ecstatic';
+            return returnS;
+        }
+    }
+
+    Future<Map<DateTime, List>> getCalendarObjects(String userId) async {
+
+        List<String> dates = await getAllDatesWithMoodOrJournalEntries(userId);
+        Map<DateTime, List> _events = await addCalendarObjects(userId, dates);
+        return _events;
+    }
+
+    Future<Map<DateTime, List>> addCalendarObjects(String userId, List<String> dates) async {
+        Map<DateTime, List> events = Map();
+
+        for (String date in dates) {
+            String journalEntry = await getJournalEntry(userId, date);
+            int mood = await getMood(userId, date);
+            String transformedMood = transformMood(mood);
+            String combinedMessage = transformedMood + ' and you wrote: \n' + journalEntry;
+            List temp = [];
+            temp = date.split("-");
+            var time = DateTime(int.parse(temp[0]), int.parse(temp[1]), int.parse(temp[2]));
+            events[time] = [combinedMessage];
+        }
+        return events;
+    }
 
     Future<List<EntryInstance>> getAllUserEntryInstances(String userId) async {
         List<String> dates = await getAllDatesWithMoodOrJournalEntries(userId);
@@ -27,7 +70,6 @@ class FireBaseHelper {
             .document(userId)
             .collection("dates")
             .getDocuments().then((documentList){
-                print("date is ${userId}");
                 for (var value in documentList.documents) {
                     dates.add(value.documentID);
                 }
