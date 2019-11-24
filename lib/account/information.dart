@@ -11,28 +11,27 @@ class AccountPage extends StatelessWidget {
   
   
   signOut() async {
-    try {
+    try {    
       await this.auth.signOut();
+     
       this.logoutCallback();
     } catch (e) {
-      print(e);
+
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Text('Settings'),
-      ),
+    return Scaffold(    
       body: Center(
         child: Column(
           children: <Widget>[
             const SizedBox(height: 30),
         RaisedButton(
           onPressed: () { 
-              signOut();
+        
+              this.signOut();
+                
           },
           child: const Text(
             'Logout',
@@ -41,7 +40,6 @@ class AccountPage extends StatelessWidget {
         ),
           ],
         )
-        
       )
     );
   }
