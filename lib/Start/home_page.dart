@@ -204,7 +204,11 @@ class _HomePageState extends State<HomePage> {
             userId: widget.userId,
             logoutCallback: widget.logoutCallback);
       case 3:
-        return new AccountPage(auth: widget.auth, userId: widget.userId, logoutCallback: widget.logoutCallback);
+        return new AccountPage(
+              auth: widget.auth,
+            userId: widget.userId,
+            logoutCallback: widget.logoutCallback
+        );
         break;
       default:
     }
