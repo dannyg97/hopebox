@@ -6,9 +6,6 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:my_app/fire_base_helper.dart';
 import 'package:my_app/date_time_helper.dart';
 
-
-
-
 class HistoryPage extends StatelessWidget {
   HistoryPage({Key key, this.auth, this.userId, this.logoutCallback})
       : super(key: key);
@@ -17,26 +14,22 @@ class HistoryPage extends StatelessWidget {
   final VoidCallback logoutCallback;
   final String userId;
 
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Your History',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      debugShowCheckedModeBanner: false,
       home: MyHomePage(
-          auth: this.auth,
-          userId: this.userId,
-          logoutCallback: this.logoutCallback,
-          title: 'Your History'
+        auth: this.auth,
+        userId: this.userId,
+        logoutCallback: this.logoutCallback,
       ),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.auth, this.userId, this.logoutCallback, this.title}) : super(key: key);
+  MyHomePage({Key key, this.auth, this.userId, this.logoutCallback, this.title})
+      : super(key: key);
   final BaseAuth auth;
   final VoidCallback logoutCallback;
   final String userId;
@@ -46,12 +39,9 @@ class MyHomePage extends StatefulWidget {
     return userId;
   }
 
-
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
-
-
 
 class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   // a mapping of certain arbitrary events to a name
@@ -72,7 +62,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   int emoji;
 
-
   String getMood(int mood) {
     String returnS = '';
     switch (mood) {
@@ -86,10 +75,10 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         returnS = 'You were feeling neutral';
         return returnS;
       case 3:
-        returnS = 'You were feeling happy!';
+        returnS = 'You were feeling happy';
         return returnS;
       case 4:
-        returnS = 'You were feeling ecstatic!';
+        returnS = 'You were feeling ecstatic';
         return returnS;
     }
   }
@@ -102,13 +91,12 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   var entries = new List<String>();
   var combinedEntry = new List<String>();
 
-
-  Future <void> getEntries(String userId)  {
-    _fireBaseHelper.getAllDatesWithMoodOrJournalEntries(userId).then((dates){
+  Future<void> getEntries(String userId) {
+    _fireBaseHelper.getAllDatesWithMoodOrJournalEntries(userId).then((dates) {
       setState(() {
         _entryDates = dates;
         print(_entryDates.length);
-        for(var i = 0; i < _entryDates.length; i++) {
+        for (var i = 0; i < _entryDates.length; i++) {
           List temp = [];
           temp = _entryDates[i].split("-");
           entryYear.add(int.parse(temp[0]));
@@ -119,53 +107,54 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     });
   }
 
-
-
-
-
-
   @override
   void initState() {
     super.initState();
     final _selectedDay = DateTime.now();
 
-    _fireBaseHelper.getAllDatesWithMoodOrJournalEntries(widget.userId).then((dates){
+    _fireBaseHelper
+        .getAllDatesWithMoodOrJournalEntries(widget.userId)
+        .then((dates) {
       setState(() {
         _entryDates = dates;
         print(_entryDates.length);
-        for(var i = 0; i < _entryDates.length; i++) {
-
-          _fireBaseHelper.getMood(widget.userId, _entryDates[i]).then((mood){
+        for (var i = 0; i < _entryDates.length; i++) {
+          _fireBaseHelper.getMood(widget.userId, _entryDates[i]).then((mood) {
             setState(() {
-
               moodRating.add(mood);
 
-              _fireBaseHelper.getJournalEntry(widget.userId, _entryDates[i]).then((journalEntry){
+              _fireBaseHelper
+                  .getJournalEntry(widget.userId, _entryDates[i])
+                  .then((journalEntry) {
                 setState(() {
                   entries.add(journalEntry);
-
                 });
               });
-
             });
           });
-
-
 
           List temp = [];
           temp = _entryDates[i].split("-");
           entryYear.add(int.parse(temp[0]));
           entryMonth.add(int.parse(temp[1]));
           entryDay.add(int.parse(temp[2]));
-
         }
         _events = {
-          _selectedDay.subtract(Duration(days: 1000)): ['Event A2', 'Event B2', 'Event C2', 'Event D2'],
-          _selectedDay.subtract(Duration(days: 900)): ['Event A2', 'Event B2', 'Event C2', 'Event D2'],
+          _selectedDay.subtract(Duration(days: 1000)): [
+            'Event A2',
+            'Event B2',
+            'Event C2',
+            'Event D2'
+          ],
+          _selectedDay.subtract(Duration(days: 900)): [
+            'Event A2',
+            'Event B2',
+            'Event C2',
+            'Event D2'
+          ],
         };
 
         _selectedEvents = _events[_selectedDay] ?? [];
-
       });
     });
 
@@ -188,7 +177,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   void _onDaySelected(DateTime day, List events) {
     final _selectedDay = DateTime.now();
 
-    for(var i = 0; i < entryYear.length; i++) {
+    for (var i = 0; i < entryYear.length; i++) {
       // _events[DateTime(entryYear[i], entryMonth[i], entryDay[i])] = [entries[i]];
       String returnS = getMood(moodRating[i]);
       var time = new DateTime(entryYear[i], entryMonth[i], entryDay[i]);
@@ -199,8 +188,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       }*/
       String combinedMessage = returnS + ' and you wrote: \n' + addEntry;
       _events[time] = [combinedMessage];
-    };
-
+    }
+    ;
 
     _selectedEvents = _events[_selectedDay] ?? [];
 
@@ -210,16 +199,13 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   }
 
   // WE'LL COME BACK TO THIS
-  void _onVisibleDaysChanged(DateTime first, DateTime last, CalendarFormat format) {
-  }
+  void _onVisibleDaysChanged(
+      DateTime first, DateTime last, CalendarFormat format) {}
 
   // OVERRIDE SOMETHING
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
       body: Column(
         mainAxisSize: MainAxisSize.max,
         children: <Widget>[
@@ -241,14 +227,15 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       //holidays: _holidays,
       startingDayOfWeek: StartingDayOfWeek.monday,
       calendarStyle: CalendarStyle(
-        selectedColor: Colors.blueAccent[400],        // this is the date selected
+        selectedColor: Colors.blueAccent[400], // this is the date selected
         todayColor: Colors.tealAccent[200], // today's date
         markersColor: Colors.red[700], // this is the marker colour
         outsideDaysVisible: false,
       ),
       headerStyle: HeaderStyle(
         // this is the colour of the month/week/fortnight toggle
-        formatButtonTextStyle: TextStyle().copyWith(color: Colors.white, fontSize: 15.0),
+        formatButtonTextStyle:
+            TextStyle().copyWith(color: Colors.white, fontSize: 15.0),
         formatButtonDecoration: BoxDecoration(
           color: Colors.deepOrange[400],
           borderRadius: BorderRadius.circular(16.0),
@@ -357,7 +344,9 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         shape: BoxShape.rectangle,
         color: _calendarController.isSelected(date)
             ? Colors.brown[500]
-            : _calendarController.isToday(date) ? Colors.brown[300] : Colors.blue[400],
+            : _calendarController.isToday(date)
+                ? Colors.brown[300]
+                : Colors.blue[400],
       ),
       width: 16.0,
       height: 16.0,
@@ -392,6 +381,9 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
           children: <Widget>[
             RaisedButton(
               child: Text('Month'),
+              shape: RoundedRectangleBorder(
+                borderRadius: new BorderRadius.circular(10.0),
+              ),
               onPressed: () {
                 setState(() {
                   _calendarController.setCalendarFormat(CalendarFormat.month);
@@ -400,14 +392,21 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
             ),
             RaisedButton(
               child: Text('Fortnight'),
+              shape: RoundedRectangleBorder(
+                borderRadius: new BorderRadius.circular(10.0),
+              ),
               onPressed: () {
                 setState(() {
-                  _calendarController.setCalendarFormat(CalendarFormat.twoWeeks);
+                  _calendarController
+                      .setCalendarFormat(CalendarFormat.twoWeeks);
                 });
               },
             ),
             RaisedButton(
               child: Text('Week'),
+              shape: RoundedRectangleBorder(
+                borderRadius: new BorderRadius.circular(10.0),
+              ),
               onPressed: () {
                 setState(() {
                   _calendarController.setCalendarFormat(CalendarFormat.week);
@@ -416,16 +415,23 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
             ),
           ],
         ),
-        const SizedBox(height: 8.0),
-        RaisedButton(
-            child: Text('Select Todays Date'),
+        SizedBox(
+          width: 330,
+          // height: double.infinity,
+          child: new RaisedButton(
+            shape: RoundedRectangleBorder(
+              borderRadius: new BorderRadius.circular(10.0),
+            ),
+            child: Text('Current day',
+            style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
             onPressed: () {
               _calendarController.setSelectedDay(
                 DateTime.now(),
                 runCallback: true,
               );
             },
-            color: Colors.greenAccent
+            color: Colors.deepOrange[400],
+          ),
         ),
       ],
     );
@@ -435,16 +441,17 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     return ListView(
       children: _selectedEvents
           .map((event) => Container(
-        decoration: BoxDecoration(
-          border: Border.all(width: 0.8),
-          borderRadius: BorderRadius.circular(12.0),
-        ),
-        margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-        child: ListTile(
-          title: Text(event.toString()),
-          //onTap: () => print('$event tapped!'),
-        ),
-      ))
+                decoration: BoxDecoration(
+                  border: Border.all(width: 0.8),
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                child: ListTile(
+                  title: Text(event.toString()),
+                  //onTap: () => print('$event tapped!'),
+                ),
+              ))
           .toList(),
     );
   }
