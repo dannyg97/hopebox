@@ -71,7 +71,7 @@ class LandingPage extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0, bottom: 80.0),
                   child: new Text(
-                    "How do you feel today?",
+                    "How are you felling ",
                     style: new TextStyle(fontSize: 30.0, color: Colors.white),
                   ),
                 )

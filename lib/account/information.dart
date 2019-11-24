@@ -8,26 +8,31 @@ class AccountPage extends StatelessWidget {
       child: Column(
        children: <Widget>[
          Padding(
-           padding: EdgeInsets.all(20.0),
+           padding: EdgeInsets.all(10.0),
          ),
          Align(
           alignment: Alignment(0.0, -0.8),
           child: Avator(),
         ),
         Padding(
-           padding: EdgeInsets.only(top: 30.0),
-           child: Text(
-             'FirstName LastName',
-             style: TextStyle(
-               fontSize: 20,
-               fontWeight: FontWeight.bold,
-               color: Colors.blue,
-             ),
-           ),
+           padding: EdgeInsets.all(3.0),
          ),
-
+        Text(
+          'User Name',
+          style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.blue,
+          ),
+        ),
+        Expanded(
+            child: Divider(
+               color: Colors.black,
+               height: 36,
+            )
+        ), 
        ],
-
+      
       )
     );
   }
@@ -41,6 +46,6 @@ Widget Avator()=>Stack (
           backgroundImage: AssetImage(''),
           radius: 80,
         ),
-
+       
       ],
     );

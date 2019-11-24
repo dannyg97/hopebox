@@ -3,13 +3,13 @@ import '../registration/authentication.dart';
 import 'package:firebase_database/firebase_database.dart';
 import '../datasets/todo.dart';
 import 'dart:async';
-import '../fire_base_helper.dart';
 import '../account/information.dart';
 import '../mood_entry.dart';
 import '../history/history.dart';
 import '../analysis/analysis.dart';
 import 'package:fancy_bottom_navigation/fancy_bottom_navigation.dart';
 import '../past_entries/past_entries.dart';
+
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.auth, this.userId, this.logoutCallback})
@@ -26,7 +26,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   List<Todo> _todoList;
 
-  final FireBaseHelper _user = FireBaseHelper();
   final FirebaseDatabase _database = FirebaseDatabase.instance;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
@@ -162,41 +161,41 @@ class _HomePageState extends State<HomePage> {
   }
 
   int _selectedIndex = 0;
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.black);
+  static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.black);
+
   static const List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Index 0: Home',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 1: Business',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 2: School',
-      style: optionStyle,
-    ),
-    Text("Index 3:", style: optionStyle)
-  ];
+  Text(
+    'Index 0: Home',
+    style: optionStyle,
+  ),
+  Text(
+     'Index 1: Business',
+     style: optionStyle,
+  ),
+  Text(
+     'Index 2: School',
+     style: optionStyle,
+  ),
+  Text(
+    "Index 3:",
+    style: optionStyle
+  )
+];
 
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+  setState(() {
+    _selectedIndex = index;
+  });
   }
 
-  _getPageWidget(int pos) {
+  _getPageWidget(int pos){
     switch (pos) {
       case 0:
         return getPastEntries();
       case 1:
-        return new HistoryPage();
-      case 2:
-        return new AnalysisPage(
-            auth: widget.auth,
-            userId: widget.userId,
-            logoutCallback: widget.logoutCallback);
+        return new HistoryPage(auth: widget.auth, userId: widget.userId, logoutCallback: widget.logoutCallback);
+      case 2: 
+        return new AnalysisPage(auth: widget.auth, userId: widget.userId, logoutCallback: widget.logoutCallback);
       case 3:
         return new AccountPage();
         break;
@@ -208,34 +207,49 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return new Scaffold(
         appBar: new AppBar(
-          title: Center(
-              child: new Text("hopebox",
-                  style: TextStyle(fontFamily: 'Pacifico'))),
-          automaticallyImplyLeading: false,
-          backgroundColor: Color(0xffff2d55),
+          title: new Text("HopeBox"),
+          actions: <Widget>[
+            new FlatButton(
+                child: new Text('Logout',
+                    style: new TextStyle(fontSize: 17.0, color: Colors.white)),
+                onPressed: signOut)
+          ],
         ),
         body: _getPageWidget(_selectedIndex),
-        bottomNavigationBar: FancyBottomNavigation(
-          tabs: [
-            TabData(iconData: Icons.home, title: "Home"),
-            TabData(iconData: Icons.calendar_today, title: "Calendar"),
-            TabData(iconData: Icons.equalizer, title: "Analysis"),
-            TabData(iconData: Icons.settings, title: "Settings")
+ 
+       
+        bottomNavigationBar: BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              title: Text('Home'),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.history),
+              title: Text("History")
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.equalizer),
+              title: Text("Analysis")
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.account_box, ),
+              title: Text("Me")
+            )
           ],
-          onTabChangedListener: (position) {
-            setState(() {
-              _selectedIndex = position;
-            });
-          },
-          barBackgroundColor: Color(0xffff2d55),
-          circleColor: Colors.white,
-          inactiveIconColor: Colors.white,
-          activeIconColor: Color(0xffff2d55),
-          textColor: Colors.white,
-//          currentIndex: _selectedIndex,
-//          unselectedItemColor: Colors.black,
-//          selectedItemColor: Colors.yellow,
-//          onTap: _onItemTapped,
+          currentIndex: _selectedIndex,
+          unselectedItemColor: Colors.black,
+          selectedItemColor: Colors.blue,
+          onTap: _onItemTapped,
         ));
+        // floatingActionButton: FloatingActionButton(
+        //   onPressed: () {
+        //     showAddTodoDialog(context);
+        //   },
+        //   tooltip: 'Increment',
+        //   child: Icon(Icons.add),
+        // ));
   }
+
+  
 }

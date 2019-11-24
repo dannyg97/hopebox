@@ -3,7 +3,7 @@ class SentimentAnalysisHelper {
   String url = "/text/analytics/v2.1/sentiment";
   Map<String, String> headers = {
     "Content-Type": "application/json",
-    "Ocp-Apim-Subscription-Key": "8d005d54cf884661b2f902f0efefb2b4"
+    "Ocp-Apim-Subscription-Key": "054b278f93b84d528a6efad7bf7d00ed"
   };
   int MOOD_SCALE_INTERVAL = 20;
 
