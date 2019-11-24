@@ -9,6 +9,7 @@ import '../history/history.dart';
 import '../analysis/analysis.dart';
 import 'package:fancy_bottom_navigation/fancy_bottom_navigation.dart';
 import '../past_entries/past_entries.dart';
+import '../fire_base_helper.dart';
 
 
 class HomePage extends StatefulWidget {
