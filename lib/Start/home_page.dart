@@ -11,7 +11,6 @@ import 'package:fancy_bottom_navigation/fancy_bottom_navigation.dart';
 import '../past_entries/past_entries.dart';
 import '../fire_base_helper.dart';
 
-
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.auth, this.userId, this.logoutCallback})
       : super(key: key);
@@ -34,18 +33,21 @@ class _HomePageState extends State<HomePage> {
   StreamSubscription<Event> _onTodoAddedSubscription;
   StreamSubscription<Event> _onTodoChangedSubscription;
   FireBaseHelper fbh = new FireBaseHelper();
-  
+
   Query _todoQuery;
 
-    Widget getPastEntries() {
-    
+  Widget getPastEntries() {
     return FutureBuilder(
       builder: (context, fireBaseSnap) {
         if (fireBaseSnap.connectionState == ConnectionState.done) {
-          return PastEntries(auth: widget.auth, userId: widget.userId, logoutCallback: widget.logoutCallback, entryInstances: fireBaseSnap.data.reversed.toList());
+          return PastEntries(
+              auth: widget.auth,
+              userId: widget.userId,
+              logoutCallback: widget.logoutCallback,
+              entryInstances: fireBaseSnap.data.reversed.toList());
         }
-          return Container(width: 0.0, height: 0.0);
-        },
+        return Container(width: 0.0, height: 0.0);
+      },
       future: fbh.getAllUserEntryInstances(widget.userId),
     );
   }
@@ -162,41 +164,45 @@ class _HomePageState extends State<HomePage> {
   }
 
   int _selectedIndex = 0;
-  static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.black);
+  static const TextStyle optionStyle =
+      TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.black);
 
   static const List<Widget> _widgetOptions = <Widget>[
-  Text(
-    'Index 0: Home',
-    style: optionStyle,
-  ),
-  Text(
-     'Index 1: Business',
-     style: optionStyle,
-  ),
-  Text(
-     'Index 2: School',
-     style: optionStyle,
-  ),
-  Text(
-    "Index 3:",
-    style: optionStyle
-  )
-];
+    Text(
+      'Index 0: Home',
+      style: optionStyle,
+    ),
+    Text(
+      'Index 1: Business',
+      style: optionStyle,
+    ),
+    Text(
+      'Index 2: School',
+      style: optionStyle,
+    ),
+    Text("Index 3:", style: optionStyle)
+  ];
 
   void _onItemTapped(int index) {
-  setState(() {
-    _selectedIndex = index;
-  });
+    setState(() {
+      _selectedIndex = index;
+    });
   }
 
-  _getPageWidget(int pos){
+  _getPageWidget(int pos) {
     switch (pos) {
       case 0:
         return getPastEntries();
       case 1:
-        return new HistoryPage(auth: widget.auth, userId: widget.userId, logoutCallback: widget.logoutCallback);
-      case 2: 
-        return new AnalysisPage(auth: widget.auth, userId: widget.userId, logoutCallback: widget.logoutCallback);
+        return new HistoryPage(
+            auth: widget.auth,
+            userId: widget.userId,
+            logoutCallback: widget.logoutCallback);
+      case 2:
+        return new AnalysisPage(
+            auth: widget.auth,
+            userId: widget.userId,
+            logoutCallback: widget.logoutCallback);
       case 3:
         return new AccountPage();
         break;
@@ -207,50 +213,32 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-        appBar: new AppBar(
-          title: new Text("HopeBox"),
-          actions: <Widget>[
-            new FlatButton(
-                child: new Text('Logout',
-                    style: new TextStyle(fontSize: 17.0, color: Colors.white)),
-                onPressed: signOut)
-          ],
-        ),
-        body: _getPageWidget(_selectedIndex),
- 
-       
-        bottomNavigationBar: BottomNavigationBar(
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              title: Text('Home'),
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.history),
-              title: Text("History")
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.equalizer),
-              title: Text("Analysis")
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.account_box, ),
-              title: Text("Me")
-            )
-          ],
-          currentIndex: _selectedIndex,
-          unselectedItemColor: Colors.black,
-          selectedItemColor: Colors.blue,
-          onTap: _onItemTapped,
-        ));
-        // floatingActionButton: FloatingActionButton(
-        //   onPressed: () {
-        //     showAddTodoDialog(context);
-        //   },
-        //   tooltip: 'Increment',
-        //   child: Icon(Icons.add),
-        // ));
+      appBar: new AppBar(
+        title: Center(
+            child:
+                new Text("hopebox", style: TextStyle(fontFamily: 'Pacifico'))),
+        automaticallyImplyLeading: false,
+        backgroundColor: Color(0xffff2d55),
+      ),
+      body: _getPageWidget(_selectedIndex),
+      bottomNavigationBar: FancyBottomNavigation(
+        tabs: [
+          TabData(iconData: Icons.home, title: "Home"),
+          TabData(iconData: Icons.calendar_today, title: "Calendar"),
+          TabData(iconData: Icons.equalizer, title: "Analysis"),
+          TabData(iconData: Icons.settings, title: "Settings")
+        ],
+        onTabChangedListener: (position) {
+          setState(() {
+            _selectedIndex = position;
+          });
+        },
+        barBackgroundColor: Color(0xffff2d55),
+        circleColor: Colors.white,
+        inactiveIconColor: Colors.white,
+        activeIconColor: Color(0xffff2d55),
+        textColor: Colors.white,
+      ),
+    );
   }
-
-  
 }
