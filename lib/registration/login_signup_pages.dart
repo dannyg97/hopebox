@@ -162,7 +162,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
                               maxLines: 1,
                               keyboardType: TextInputType.emailAddress,
                               validator: (value) => value.isEmpty
-                                  ? 'Email can\'t be empty'
+                                  ? 'Email might be wrong or can\'t be empty'
                                   : null,
                               onSaved: (value) => _email = value.trim(),
                               style: TextStyle(
@@ -188,7 +188,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
                                 prefixIcon: Icon(Icons.lock_outline),
                                 labelStyle: TextStyle(fontSize: 15)),
                             validator: (value) => value.isEmpty
-                                ? 'Password can\'t be empty'
+                                ? 'Password might be wrong or can\'t be empty'
                                 : null,
                             onSaved: (value) => _password = value.trim(),
                           ),
