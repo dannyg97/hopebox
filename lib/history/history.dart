@@ -13,27 +13,44 @@ class HistoryPage extends StatelessWidget {
   final BaseAuth auth;
   final VoidCallback logoutCallback;
   final String userId;
+  FireBaseHelper fbh = new FireBaseHelper();
+
+  Widget calendarWidget() {
+       
+    return FutureBuilder(
+      builder: (context, fireBaseSnap) {
+        if (fireBaseSnap.connectionState == ConnectionState.done) {
+          return MyHomePage(
+            auth: this.auth,
+            userId: this.userId,
+            logoutCallback: this.logoutCallback,
+            events: fireBaseSnap.data,
+          );
+        }
+        return Container(width: 0.0, height: 0.0);
+      },
+      future: fbh.getCalendarObjects(userId),
+
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: MyHomePage(
-        auth: this.auth,
-        userId: this.userId,
-        logoutCallback: this.logoutCallback,
-      ),
+      home: calendarWidget(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.auth, this.userId, this.logoutCallback, this.title})
+  MyHomePage({Key key, this.auth, this.userId, this.logoutCallback, this.title, this.events})
       : super(key: key);
   final BaseAuth auth;
   final VoidCallback logoutCallback;
   final String userId;
   final String title;
+  final Map<DateTime, List> events;
 
   String get user_ID {
     return userId;
@@ -95,7 +112,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     _fireBaseHelper.getAllDatesWithMoodOrJournalEntries(userId).then((dates) {
       setState(() {
         _entryDates = dates;
-        print(_entryDates.length);
         for (var i = 0; i < _entryDates.length; i++) {
           List temp = [];
           temp = _entryDates[i].split("-");
@@ -111,52 +127,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     final _selectedDay = DateTime.now();
-
-    _fireBaseHelper
-        .getAllDatesWithMoodOrJournalEntries(widget.userId)
-        .then((dates) {
-      setState(() {
-        _entryDates = dates;
-        print(_entryDates.length);
-        for (var i = 0; i < _entryDates.length; i++) {
-          _fireBaseHelper.getMood(widget.userId, _entryDates[i]).then((mood) {
-            setState(() {
-              moodRating.add(mood);
-
-              _fireBaseHelper
-                  .getJournalEntry(widget.userId, _entryDates[i])
-                  .then((journalEntry) {
-                setState(() {
-                  entries.add(journalEntry);
-                });
-              });
-            });
-          });
-
-          List temp = [];
-          temp = _entryDates[i].split("-");
-          entryYear.add(int.parse(temp[0]));
-          entryMonth.add(int.parse(temp[1]));
-          entryDay.add(int.parse(temp[2]));
-        }
-        _events = {
-          _selectedDay.subtract(Duration(days: 1000)): [
-            'Event A2',
-            'Event B2',
-            'Event C2',
-            'Event D2'
-          ],
-          _selectedDay.subtract(Duration(days: 900)): [
-            'Event A2',
-            'Event B2',
-            'Event C2',
-            'Event D2'
-          ],
-        };
-
-        _selectedEvents = _events[_selectedDay] ?? [];
-      });
-    });
+    var time = DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day);
+    _selectedEvents =  widget.events[time];
 
     _calendarController = CalendarController();
     _animationController = AnimationController(
@@ -223,7 +195,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   Widget _buildTableCalendar() {
     return TableCalendar(
       calendarController: _calendarController,
-      events: _events,
+      events: widget.events,
       //holidays: _holidays,
       startingDayOfWeek: StartingDayOfWeek.monday,
       calendarStyle: CalendarStyle(
@@ -371,8 +343,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   }
 
   Widget _buildButtons() {
-    final dateTime = _events.keys.elementAt(_events.length - 2);
-
     return Column(
       children: <Widget>[
         Row(
