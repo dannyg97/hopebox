@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/Start.dart';
 import '../registration/authentication.dart';
 import 'home_page.dart';
 import '../registration/login_signup_pages.dart';
@@ -10,8 +11,9 @@ enum AuthStatus {
 }
 
 class RootPage extends StatefulWidget {
-  RootPage({this.auth});
+  RootPage({this.auth, this.login});
 
+  final bool login;
   final BaseAuth auth;
 
   @override
@@ -48,6 +50,7 @@ class _RootPageState extends State<RootPage> {
   }
 
   void logoutCallback() {
+    print("The app is logout");
     setState(() {
       authStatus = AuthStatus.NOT_LOGGED_IN;
       _userId = "";
@@ -70,8 +73,11 @@ class _RootPageState extends State<RootPage> {
         return buildWaitingScreen();
         break;
       case AuthStatus.NOT_LOGGED_IN:
+
+      // return new Start();
         return new LoginSignupPage(
           auth: widget.auth,
+          login: widget.login,
           loginCallback: loginCallback,
         );
         break;
@@ -82,11 +88,6 @@ class _RootPageState extends State<RootPage> {
             auth: widget.auth,
             logoutCallback: logoutCallback,
           );
-          // return new MoodEnter(
-          //   userId: _userId,
-          //   auth: widget.auth,
-          //   logoutCallback: logoutCallback,
-          // );
         } else
           return buildWaitingScreen();
         break;
