@@ -18,7 +18,7 @@ class AnalysisPage extends StatelessWidget {
         children: <Widget>[
           Text("UserId: $userId"),
           Padding(
-            
+            padding: EdgeInsets.all(1),
           ),
           // Text("Hello World")
           AnalysisWidget(auth: this.auth, userId: this.userId, logoutCallback: this.logoutCallback),

@@ -1,48 +1,25 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-import 'dart:math';
-
-import 'package:charts_flutter/flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:intl/date_symbol_data_local.dart';
-import 'package:flutter/material.dart';
 import 'package:my_app/registration/authentication.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:my_app/fire_base_helper.dart';
-import 'package:my_app/sentiment_analysis_helper.dart';
-import 'package:my_app/api_base_helper.dart';
-import 'package:http/http.dart';
-import 'package:my_app/entry_instance.dart';
 import 'package:my_app/date_time_helper.dart';
-import 'dart:io';
 
 
 
-=======
-import 'package:flutter/material.dart';
->>>>>>> parent of caadb69... Merge branch 'master' of github.com:dannyg97/hopebox
-=======
-import 'package:flutter/material.dart';
->>>>>>> parent of caadb69... Merge branch 'master' of github.com:dannyg97/hopebox
-=======
-import 'package:flutter/material.dart';
->>>>>>> parent of caadb69... Merge branch 'master' of github.com:dannyg97/hopebox
-=======
-import 'package:flutter/material.dart';
->>>>>>> parent of caadb69... Merge branch 'master' of github.com:dannyg97/hopebox
 
 class HistoryPage extends StatelessWidget {
-  
+  HistoryPage({Key key, this.auth, this.userId, this.logoutCallback})
+      : super(key: key);
+
+  final BaseAuth auth;
+  final VoidCallback logoutCallback;
+  final String userId;
+
+
   @override
   Widget build(BuildContext context) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
     return MaterialApp(
       title: 'Your History',
       theme: ThemeData(
@@ -93,8 +70,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   DateTimeHelper _dateTimeHelper = new DateTimeHelper();
 
-
-
   int emoji;
 
 
@@ -111,8 +86,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         returnS = 'You were feeling neutral';
         return returnS;
       case 3:
-      returnS = 'You were feeling happy!';
-      return returnS;
+        returnS = 'You were feeling happy!';
+        return returnS;
       case 4:
         returnS = 'You were feeling ecstatic!';
         return returnS;
@@ -129,7 +104,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
 
   Future <void> getEntries(String userId)  {
-
     _fireBaseHelper.getAllDatesWithMoodOrJournalEntries(userId).then((dates){
       setState(() {
         _entryDates = dates;
@@ -186,11 +160,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
         }
         _events = {
-         // DateTime(entryYear[0], entryMonth[0], entryDay[0]):['slidjfskdjfsd'],
           _selectedDay.subtract(Duration(days: 1000)): ['Event A2', 'Event B2', 'Event C2', 'Event D2'],
           _selectedDay.subtract(Duration(days: 900)): ['Event A2', 'Event B2', 'Event C2', 'Event D2'],
-
-
         };
 
         _selectedEvents = _events[_selectedDay] ?? [];
@@ -218,7 +189,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     final _selectedDay = DateTime.now();
 
     for(var i = 0; i < entryYear.length; i++) {
-     // _events[DateTime(entryYear[i], entryMonth[i], entryDay[i])] = [entries[i]];
+      // _events[DateTime(entryYear[i], entryMonth[i], entryDay[i])] = [entries[i]];
       String returnS = getMood(moodRating[i]);
       var time = new DateTime(entryYear[i], entryMonth[i], entryDay[i]);
       String addEntry = '';
@@ -228,7 +199,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       }*/
       String combinedMessage = returnS + ' and you wrote: \n' + addEntry;
       _events[time] = [combinedMessage];
-      };
+    };
 
 
     _selectedEvents = _events[_selectedDay] ?? [];
@@ -390,38 +361,17 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       ),
       width: 16.0,
       height: 16.0,
-=======
-    return Container(
-      decoration: BoxDecoration(color: Colors.white),
->>>>>>> parent of caadb69... Merge branch 'master' of github.com:dannyg97/hopebox
-=======
-    return Container(
-      decoration: BoxDecoration(color: Colors.white),
->>>>>>> parent of caadb69... Merge branch 'master' of github.com:dannyg97/hopebox
-=======
-    return Container(
-      decoration: BoxDecoration(color: Colors.white),
->>>>>>> parent of caadb69... Merge branch 'master' of github.com:dannyg97/hopebox
-=======
-    return Container(
-      decoration: BoxDecoration(color: Colors.white),
->>>>>>> parent of caadb69... Merge branch 'master' of github.com:dannyg97/hopebox
       child: Center(
         child: Text(
-          'History',
-          textDirection: TextDirection.ltr,
-          style: TextStyle(
-            fontSize: 32,
-            color: Colors.black87,
+          '${events.length}',
+          style: TextStyle().copyWith(
+            color: Colors.white,
+            fontSize: 12.0,
           ),
         ),
       ),
     );
   }
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 
   Widget _buildHolidaysMarker() {
     return Icon(
@@ -468,14 +418,14 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         ),
         const SizedBox(height: 8.0),
         RaisedButton(
-          child: Text('Select Todays Date'),
-          onPressed: () {
-            _calendarController.setSelectedDay(
-              DateTime.now(),
-              runCallback: true,
-            );
-          },
-          color: Colors.greenAccent
+            child: Text('Select Todays Date'),
+            onPressed: () {
+              _calendarController.setSelectedDay(
+                DateTime.now(),
+                runCallback: true,
+              );
+            },
+            color: Colors.greenAccent
         ),
       ],
     );
@@ -498,13 +448,4 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
           .toList(),
     );
   }
-=======
->>>>>>> parent of caadb69... Merge branch 'master' of github.com:dannyg97/hopebox
-=======
->>>>>>> parent of caadb69... Merge branch 'master' of github.com:dannyg97/hopebox
-=======
->>>>>>> parent of caadb69... Merge branch 'master' of github.com:dannyg97/hopebox
-=======
->>>>>>> parent of caadb69... Merge branch 'master' of github.com:dannyg97/hopebox
 }
-
