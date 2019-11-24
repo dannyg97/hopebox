@@ -39,7 +39,11 @@ android {
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.example.hopebox"
+<<<<<<< HEAD
         minSdkVersion 21
+=======
+        minSdkVersion 16
+>>>>>>> parent of 75dd0f2... Merge branch 'ui_update'
         targetSdkVersion 28
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName

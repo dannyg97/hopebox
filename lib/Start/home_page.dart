@@ -3,12 +3,10 @@ import '../registration/authentication.dart';
 import 'package:firebase_database/firebase_database.dart';
 import '../datasets/todo.dart';
 import 'dart:async';
-import '../fire_base_helper.dart';
 import '../account/information.dart';
 import '../mood_entry.dart';
 import '../history/history.dart';
 import '../analysis/analysis.dart';
-import 'package:fancy_bottom_navigation/fancy_bottom_navigation.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.auth, this.userId, this.logoutCallback})
@@ -25,7 +23,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   List<Todo> _todoList;
 
-  final FireBaseHelper _user = FireBaseHelper();
   final FirebaseDatabase _database = FirebaseDatabase.instance;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
@@ -147,143 +144,91 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget showTodoList() {
-    if (1 == 1) {
-      _user.getAllUserEntryInstances(widget.userId).then((entryInstances) {
-        print("=============== $entryInstances ===============");
-      });
-
-      final titles = [
-        'Friday 8th November',
-        'Saturday 9th November',
-        'Sunday 10th November',
-      ];
-
-      final subtitle = [
-        'I got full marks for one of my assignments today!',
-        'I went out with some friends and had a blast!',
-        'I got 20% for one of my exams...',
-      ];
-
-      final icons = [
-        Icons.sentiment_satisfied,
-        Icons.sentiment_satisfied,
-        Icons.sentiment_very_dissatisfied,
-      ];
-
-      final colors = [
-        Color(0x2eff2d55),
-        Color(0x2eff2d55),
-        Color(0x2eff2d55),
-      ];
-
-      return Column(
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(top: 5),
-            child: MaterialButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => MoodEnter(
-                      userId: widget.userId,
-                      auth: this.widget.auth,
-                      logoutCallback: widget.logoutCallback,
-                    ),
-                  ),
-                );
+    if (_todoList.length > 0) {
+      return ListView.builder(
+          shrinkWrap: true,
+          itemCount: _todoList.length,
+          itemBuilder: (BuildContext context, int index) {
+            String todoId = _todoList[index].key;
+            String subject = _todoList[index].subject;
+            bool completed = _todoList[index].completed;
+            String userId = _todoList[index].userId;
+            return Dismissible(
+              key: Key(todoId),
+              background: Container(color: Colors.red),
+              onDismissed: (direction) async {
+                deleteTodo(todoId, index);
               },
-              child: Text(
-                'ADD A NEW ENTRY',
-                style: TextStyle(
-                  fontSize: 15,
-                  fontFamily: 'Arial',
-                  fontWeight: FontWeight.bold,
+              child: ListTile(
+                title: Text(
+                  subject,
+                  style: TextStyle(fontSize: 20.0),
                 ),
+                trailing: IconButton(
+                    icon: (completed)
+                        ? Icon(
+                            Icons.done_outline,
+                            color: Colors.green,
+                            size: 20.0,
+                          )
+                        : Icon(Icons.done, color: Colors.grey, size: 20.0),
+                    onPressed: () {
+                      updateTodo(_todoList[index]);
+                    }),
               ),
-              color: Color(0xffff2d55),
-              elevation: 0,
-              minWidth: 400,
-              height: 50,
-              textColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-            ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: titles.length,
-              itemBuilder: (context, index) {
-                return Card(
-                  child: Container(
-                    decoration: new BoxDecoration(
-                      color: Color(0xffffffff),
-                      border: Border.all(color: Color(0xffff2d55)),
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    child: ListTile(
-                      leading:
-                          Icon(icons[index], size: 40, color: Colors.black87),
-                      title: Text(
-                        titles[index],
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      subtitle: Text(
-                        subtitle[index],
-                        style: TextStyle(color: Colors.black87),
-                      ),
-                      contentPadding: EdgeInsets.fromLTRB(15, 10, 15, 10),
-                    ),
-                  ),
-                );
-              },
-            ),
-          )
-        ],
-      );
+            );
+          });
     } else {
       return MoodEnter(
-        userId: widget.userId,
+        userId: widget.userId, 
         auth: this.widget.auth,
-        logoutCallback: widget.logoutCallback,
-      );
+        logoutCallback: widget.logoutCallback
+      ); 
     }
   }
 
-  int _selectedIndex = 0;
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.black);
+int _selectedIndex = 0;
+static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.black);
   static const List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Index 0: Home',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 1: Business',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 2: School',
-      style: optionStyle,
-    ),
-    Text("Index 3:", style: optionStyle)
-  ];
+  Text(
+    'Index 0: Home',
+    style: optionStyle,
+  ),
+  Text(
+     'Index 1: Business',
+     style: optionStyle,
+  ),
+  Text(
+     'Index 2: School',
+     style: optionStyle,
+  ),
+  Text(
+    "Index 3:",
+    style: optionStyle
+  )
+];
 
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+  setState(() {
+    _selectedIndex = index;
+  });
   }
 
-  _getPageWidget(int pos) {
+  _getPageWidget(int pos){
     switch (pos) {
       case 0:
         return showTodoList();
       case 1:
+<<<<<<< HEAD
         return new HistoryPage();
         return new HistoryPage(auth: widget.auth, userId: widget.userId, logoutCallback: widget.logoutCallback);
       case 2: 
         return new AnalysisPage(auth: widget.auth, userId: widget.userId, logoutCallback: widget.logoutCallback);
+=======
+        return new HistoryPage(); 
+      case 2: 
+        return new AnalysisPage(auth: widget.auth, userId: widget.userId, logoutCallback: widget.logoutCallback); 
+>>>>>>> parent of 75dd0f2... Merge branch 'ui_update'
       case 3:
         return new AccountPage();
         break;
@@ -295,34 +240,49 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return new Scaffold(
         appBar: new AppBar(
-          title: Center(
-              child: new Text("hopebox",
-                  style: TextStyle(fontFamily: 'Pacifico'))),
-          automaticallyImplyLeading: false,
-          backgroundColor: Color(0xffff2d55),
+          title: new Text("HopeBox"),
+          actions: <Widget>[
+            new FlatButton(
+                child: new Text('Logout',
+                    style: new TextStyle(fontSize: 17.0, color: Colors.white)),
+                onPressed: signOut)
+          ],
         ),
         body: _getPageWidget(_selectedIndex),
-        bottomNavigationBar: FancyBottomNavigation(
-          tabs: [
-            TabData(iconData: Icons.home, title: "Home"),
-            TabData(iconData: Icons.calendar_today, title: "Calendar"),
-            TabData(iconData: Icons.equalizer, title: "Analysis"),
-            TabData(iconData: Icons.settings, title: "Settings")
+ 
+       
+        bottomNavigationBar: BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              title: Text('Home'),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.history),
+              title: Text("History")
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.equalizer),
+              title: Text("Analysis")
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.account_box, ),
+              title: Text("Me")
+            )
           ],
-          onTabChangedListener: (position) {
-            setState(() {
-              _selectedIndex = position;
-            });
-          },
-          barBackgroundColor: Color(0xffff2d55),
-          circleColor: Colors.white,
-          inactiveIconColor: Colors.white,
-          activeIconColor: Color(0xffff2d55),
-          textColor: Colors.white,
-//          currentIndex: _selectedIndex,
-//          unselectedItemColor: Colors.black,
-//          selectedItemColor: Colors.yellow,
-//          onTap: _onItemTapped,
+          currentIndex: _selectedIndex,
+          unselectedItemColor: Colors.black,
+          selectedItemColor: Colors.blue,
+          onTap: _onItemTapped,
         ));
+        // floatingActionButton: FloatingActionButton(
+        //   onPressed: () {
+        //     showAddTodoDialog(context);
+        //   },
+        //   tooltip: 'Increment',
+        //   child: Icon(Icons.add),
+        // ));
   }
+
+  
 }

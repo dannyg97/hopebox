@@ -10,9 +10,8 @@ enum AuthStatus {
 }
 
 class RootPage extends StatefulWidget {
-  RootPage({this.auth, this.login});
+  RootPage({this.auth});
 
-  final bool login;
   final BaseAuth auth;
 
   @override
@@ -73,7 +72,6 @@ class _RootPageState extends State<RootPage> {
       case AuthStatus.NOT_LOGGED_IN:
         return new LoginSignupPage(
           auth: widget.auth,
-          login: widget.login,
           loginCallback: loginCallback,
         );
         break;
@@ -84,6 +82,11 @@ class _RootPageState extends State<RootPage> {
             auth: widget.auth,
             logoutCallback: logoutCallback,
           );
+          // return new MoodEnter(
+          //   userId: _userId,
+          //   auth: widget.auth,
+          //   logoutCallback: logoutCallback,
+          // );
         } else
           return buildWaitingScreen();
         break;
