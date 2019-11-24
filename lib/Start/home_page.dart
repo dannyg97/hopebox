@@ -223,7 +223,7 @@ static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWei
       case 2: 
         return new AnalysisPage(auth: widget.auth, userId: widget.userId, logoutCallback: widget.logoutCallback); 
       case 3:
-        return new AccountPage();
+        return new AccountPage(auth: widget.auth, userId: widget.userId, logoutCallback: widget.logoutCallback);
         break;
       default:
     }

@@ -5,7 +5,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:intl/intl.dart';
 import "package:my_app/fire_base_helper.dart";
-import 'package:date_range_picker/date_range_picker.dart' as DateRagePicker;
+// import 'package:date_range_picker/date_range_picker.dart' as DateRagePicker;
 // import "package:font_awesome_flutter/font_awesome_flutter.dart";
 
 class AnalysisPage extends StatelessWidget {
@@ -15,6 +15,25 @@ class AnalysisPage extends StatelessWidget {
   final VoidCallback logoutCallback;
   final String userId;
   FireBaseHelper fbh = new FireBaseHelper();
+
+  List<String> allDates; 
+  Widget analysisWidget() {
+       
+    return FutureBuilder(
+      builder: (context, fireBaseSnap) {
+        if (fireBaseSnap.connectionState == ConnectionState.none &&
+            fireBaseSnap.hasData == null) {
+            return Container(width: 0.0, height: 0.0);
+        }
+        allDates = fireBaseSnap.data;
+        // print(fireBaseSnap.data.document);
+        return AnalysisWidget(auth: this.auth, userId: this.userId, logoutCallback: this.logoutCallback, allDates: allDates.toList());
+      },
+      future: fbh.getAllDatesWithMoodOrJournalEntries(userId),
+
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,35 +41,64 @@ class AnalysisPage extends StatelessWidget {
           automaticallyImplyLeading: false,
           title: const Text('Analytical Results'),
         ),
-       body:AnalysisWidget(auth: this.auth, userId: this.userId, logoutCallback: this.logoutCallback),
-    );
+       body: analysisWidget(),    
+      );
   }
 
 }
 
 class AnalysisWidget extends StatefulWidget{
-  AnalysisWidget({Key key,this.auth, this.userId, this.logoutCallback})
+  AnalysisWidget({Key key,this.auth, this.userId, this.logoutCallback, this.allDates})
       : super(key: key);
   final BaseAuth auth;
   final VoidCallback logoutCallback;
   final String userId;
+  final List<String> allDates;
+
   @override
   State<StatefulWidget> createState() => _AnalysisWidgetState(); 
-
 
 }
 
 class _AnalysisWidgetState extends State<AnalysisWidget>{
   final FirebaseDatabase _database = FirebaseDatabase.instance; 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>(); 
+  FireBaseHelper fbh = new FireBaseHelper();
   Query _journaleQuery; 
+  int records = 0; 
+  int days = 7; 
   
   @override 
   void initState(){
     super.initState();
+    print("The widget is ");
+    print(widget.userId);
+    print("The auth is");
+    print(widget.auth);
+    print("The dates are");
+    print(widget.allDates);
+    print("The mood is");
+    records = getRecordsNum(widget.allDates, days); 
     _journaleQuery = _database.reference().child('journal_entry')
     .orderByChild('userId').equalTo(widget.userId);
   }
+
+  int getRecordsNum(List<String> dates, days){
+    int records = 0; 
+    DateTime now = new DateTime.now();
+    var today = new DateFormat("yyyy-MM-dd").format(now);
+    var pointDate =  now.subtract(new Duration(days: days));
+    for(var item in dates){
+      //  var time1 = DateTime.parse(today) ;
+      var time1 = pointDate;
+       var time2 = DateTime.parse(item);
+       if(time2.isAfter(time1)){
+         records = records + 1; 
+       }
+    }
+    return records; 
+  }
+
   // _journaelQuery
   @override
   Widget build(BuildContext context) {
@@ -79,7 +127,7 @@ class _AnalysisWidgetState extends State<AnalysisWidget>{
                 padding: EdgeInsets.all(3.0),
                 child: Column(
                   children: <Widget>[
-                    simpleBarSection
+                    simpleBarSection(widget.allDates),
                   ],
                 ),
               ),
@@ -91,8 +139,7 @@ class _AnalysisWidgetState extends State<AnalysisWidget>{
                 child: Column(
                   children: <Widget>[
                     // CustomAxisTickFormattersSection
-                    NonzeroBoundMeasureAxisSection
-                 
+                    NonzeroBoundMeasureAxisSection(widget.allDates),
                   ],
                 ),
               ),
@@ -106,7 +153,6 @@ class _AnalysisWidgetState extends State<AnalysisWidget>{
 
   Widget _buildButtons() {
     // final dateTime = _events.keys.elementAt(_events.length - 2);
-
     return Column(
       children: <Widget>[
         Row(
@@ -118,6 +164,9 @@ class _AnalysisWidgetState extends State<AnalysisWidget>{
               onPressed: () {
                 setState(() {
                   print("Month");
+                  days = 30; 
+                  records = getRecordsNum(widget.allDates, days); 
+                       print(days);
                   // _calendarController.setCalendarFormat(CalendarFormat.month);
                 });
               },
@@ -127,111 +176,57 @@ class _AnalysisWidgetState extends State<AnalysisWidget>{
               onPressed: () {
                 setState(() {
                   print("Fortnight");
+                  days = 14;
+                  records = getRecordsNum(widget.allDates, days); 
+                  print(days);
                   // _calendarController.setCalendarFormat(CalendarFormat.twoWeeks);
                 });
+                
               },
             ),
             RaisedButton(
               child: Text('Week'),
+           
+             
+                 color: Colors.blue,
+      
               onPressed: () {
                 setState(() {
                   print("Week");
+                  days = 7; 
+                  records = getRecordsNum(widget.allDates, days); 
+                  
+                  print(days);
                   // _calendarController.setCalendarFormat(CalendarFormat.week);
                 });
-              },
+              },             
             ),
-          ],
+          Icon(
+            Icons.star,
+            color: Colors.red[500],
+          ),
+          Text('$records: Records'),
+        ],
         ),
         const SizedBox(height: 8.0),
-      
       ],
     );
   }
- 
-  
-Widget datePickButton= new MaterialButton(
-    color: Colors.deepOrangeAccent,
-    onPressed: () async {
-      final List<DateTime> picked = await DateRagePicker.showDatePicker(
-          // context: context,
-          initialFirstDate: new DateTime.now(),
-          initialLastDate: (new DateTime.now()).add(new Duration(days: 7)),
-          firstDate: new DateTime(2015),
-          lastDate: new DateTime(2020)
-      );
-      if (picked != null && picked.length == 2) {
-          print(picked);
-      }
-    },
-    child: new Text("Pick date range")
-);
+
 }
 
-
-
-Widget titleSection = Container(
-  padding: const EdgeInsets.all(32),
-  child: Row(
-    children: [
-      Expanded(
-        /*1*/
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children:[
-            /*2*/
-           
-            Container(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: Text(
-                'Hi Kevindsd',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-           
-            // Text(
-            //   'Your mood inputs in past 30 days',
-            //   style: TextStyle(
-            //     color: Colors.grey[500],
-            //   ),
-            // ),
-          ],
-        ),
-      ),
-      /*3*/
-      Icon(
-        Icons.star,
-        color: Colors.red[500],
-      ),
-      Text('21: Records'),
-    ],
-  ),
-);
-
-
-// Color color = Theme.of(context).primaryColor;
-
-Widget buttonSection = Container(
-  child: Row(
-    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    children: [
-      _buildButtonColumn(Colors.blue, Icons.call, 'CALL'),
-      _buildButtonColumn(Colors.blue, Icons.near_me, 'ROUTE'),
-      _buildButtonColumn(Colors.blue, Icons.share, 'SHARE'),
-    ],
-  ),
-);
-
-Widget simpleBarSection = Container(
+//SimpleBarSection 
+Widget simpleBarSection(List<String> allDate){
+  return new Container(
   child: new Padding(
     padding: new EdgeInsets.all(2.0),
     child: new SizedBox(
       height: 180.0,
-      child: SimpleBarChart(_createSampleData()),
+      child: SimpleBarChart(_createSampleData(allDate)),
     )
   ),
-);
+  );
+}
 
 Widget simpleDatumLegendWithMeasuresSection = Container(
   child: new Padding(
@@ -240,16 +235,6 @@ Widget simpleDatumLegendWithMeasuresSection = Container(
       height: 180,
       child: DatumLegendWithMeasures(_createDatumLegendWithMeasuresData()),
     ),
-  ),
-);
-
-Widget CustomAxisTickFormattersSection = Container(
-  child: new Padding(
-    padding: new EdgeInsets.all(0.0),
-    child: new SizedBox(
-      height: 180.0,
-      child: CustomAxisTickFormatters(_CustomAxisTickFormattersData()),
-    )
   ),
 );
 
@@ -280,13 +265,13 @@ class SimpleBarChart extends StatelessWidget {
 
   SimpleBarChart(this.seriesList, {this.animate});
   /// Creates a [BarChart] with sample data and no transition.
-  factory SimpleBarChart.withSampleData() {
-    return new SimpleBarChart(
-      _createSampleData(),
-      // Disable animations for image tests.
-      animate: false,
-    );
-  }
+  // factory SimpleBarChart.withSampleData() {
+  //   return new SimpleBarChart(
+  //     _createSampleData(this.allDate),
+  //     // Disable animations for image tests.
+  //     animate: false,
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -295,9 +280,8 @@ class SimpleBarChart extends StatelessWidget {
       animate: animate,
     );
   }
-
-  /// Create one series with sample hard coded data.
   
+  /// Create one series with sample hard coded data.
 }
 
 /// Sample ordinal data type.
@@ -308,15 +292,21 @@ class OrdinalSales {
   OrdinalSales(this.year, this.sales);
 }
 
-List<charts.Series<OrdinalSales, String>> _createSampleData() {
+List<charts.Series<OrdinalSales, String>> _createSampleData(List<String> allDates) {
+    int very_diss = 0; 
+    int diss = 0; 
+    int neutral = 0; 
+    int satisified = 0; 
+    int very_sati = 0 ; 
+
     final data = [
       //TODO 
       //Replace the following data to the real data 
-      new OrdinalSales('Very Said', 8),
-      new OrdinalSales('Sad', 6),
-      new OrdinalSales('Ok', 10),
-      new OrdinalSales('Happy', 6),
-      new OrdinalSales('Very Happy', 7),
+      new OrdinalSales('Very Dissatisfied', very_diss),
+      new OrdinalSales('Dissatisfied', diss),
+      new OrdinalSales('Neutral', neutral),
+      new OrdinalSales('Satisfied', satisified),
+      new OrdinalSales('Very Satisfied', very_sati),
     ];
     return [
       new charts.Series<OrdinalSales, String>(
@@ -329,83 +319,6 @@ List<charts.Series<OrdinalSales, String>> _createSampleData() {
     ];
 }
 
-class CustomAxisTickFormatters extends StatelessWidget {
-  final List<charts.Series> seriesList;
-  final bool animate;
-  CustomAxisTickFormatters(this.seriesList, {this.animate});
-  /// Creates a [TimeSeriesChart] with sample data and no transition.
-  factory CustomAxisTickFormatters.withSampleData() {
-    return new CustomAxisTickFormatters(
-      _createSampleData(),
-      // Disable animations for image tests.
-      animate: false,
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    /// Formatter for numeric ticks using [NumberFormat] to format into currency
-    ///
-    /// This is what is used in the [NumericAxisSpec] below.
-    final simpleCurrencyFormatter =
-        new charts.BasicNumericTickFormatterSpec.fromNumberFormat(
-            new NumberFormat.compactSimpleCurrency());
-
-    /// Formatter for numeric ticks that uses the callback provided.
-    ///
-    /// Use this formatter if you need to format values that [NumberFormat]
-    /// cannot provide.
-    ///
-    /// To see this formatter, change [NumericAxisSpec] to use this formatter.
-    // final customTickFormatter =
-    //   charts.BasicNumericTickFormatterSpec((num value) => 'MyValue: $value');
-
-    return new charts.TimeSeriesChart(seriesList,
-        animate: animate,
-        // Sets up a currency formatter for the measure axis.
-        primaryMeasureAxis: new charts.NumericAxisSpec(
-            tickFormatterSpec: simpleCurrencyFormatter),
-
-        /// Customizes the date tick formatter. It will print the day of month
-        /// as the default format, but include the month and year if it
-        /// transitions to a new month.
-        ///
-        /// minute, hour, day, month, and year are all provided by default and
-        /// you can override them following this pattern.
-        domainAxis: new charts.DateTimeAxisSpec(
-            tickFormatterSpec: new charts.AutoDateTimeTickFormatterSpec(
-                day: new charts.TimeFormatterSpec(
-                    format: 'd', transitionFormat: 'MM/dd/yyyy'))));
-  }
-
-  /// Create one series with sample hard coded data.
-  static List<charts.Series<MyRow, DateTime>> _createSampleData() {
-
-    final data = [
-      new MyRow(new DateTime(2017, 9, 25), 6),
-      new MyRow(new DateTime(2017, 9, 26), 8),
-      new MyRow(new DateTime(2017, 9, 27), 6),
-      new MyRow(new DateTime(2017, 9, 28), 9),
-      new MyRow(new DateTime(2017, 9, 29), 11),
-      new MyRow(new DateTime(2017, 9, 30), 15),
-      new MyRow(new DateTime(2017, 10, 01), 25),
-      new MyRow(new DateTime(2017, 10, 02), 33),
-      new MyRow(new DateTime(2017, 10, 03), 27),
-      new MyRow(new DateTime(2017, 10, 04), 31),
-      new MyRow(new DateTime(2017, 10, 05), 23),
-    ];
-
-    return [
-      new charts.Series<MyRow, DateTime>(
-        id: 'Cost',
-        domainFn: (MyRow row, _) => row.timeStamp,
-        measureFn: (MyRow row, _) => row.headcount,
-        data: data
-      )
-    ]; 
-
-  }
-}
 
 /// Sample time series data type.
 class MyRow {
@@ -416,44 +329,25 @@ class MyRow {
 
 
 
-
-List<charts.Series<MyRow, DateTime>> _CustomAxisTickFormattersData() {
-
+//PASS ALL DATA with mood
+List<charts.Series<MyRow, DateTime>> _CustomAxisTickFormattersData(List<String> allData) {
     // TODO 
     // Replace the data to the real data 
-    final data = [
-      new MyRow(new DateTime(2019, 9, 25), 3),
-      new MyRow(new DateTime(2019, 9, 26), 4),
-      new MyRow(new DateTime(2019, 9, 27), 2),
-      new MyRow(new DateTime(2019, 9, 28), 2),
-      new MyRow(new DateTime(2019, 9, 29), 3),
-      new MyRow(new DateTime(2019, 9, 30), 5),
-      new MyRow(new DateTime(2019, 10, 1), 2),
-      new MyRow(new DateTime(2019, 10, 2), 3),
-      new MyRow(new DateTime(2019, 10, 3), 4),
-      new MyRow(new DateTime(2019, 10, 4), 2),
-      new MyRow(new DateTime(2019, 10, 5), 3),
-      new MyRow(new DateTime(2019, 10, 6), 2),
-      new MyRow(new DateTime(2019, 10, 7), 3),
-      new MyRow(new DateTime(2019, 10, 8), 4),
-      new MyRow(new DateTime(2019, 10, 9), 2),
-      new MyRow(new DateTime(2019, 10, 10), 3),
-      new MyRow(new DateTime(2019, 10, 11), 2),
-      new MyRow(new DateTime(2019, 10, 12), 1),
-      new MyRow(new DateTime(2019, 10, 13), 2),
-      new MyRow(new DateTime(2019, 10, 14), 3),
-      new MyRow(new DateTime(2019, 10, 15), 4),
-      new MyRow(new DateTime(2019, 10, 16), 2),
-      new MyRow(new DateTime(2019, 10, 17), 5),
-      new MyRow(new DateTime(2019, 10, 18), 2),
-      new MyRow(new DateTime(2019, 10, 19), 3),
-      new MyRow(new DateTime(2019, 10, 20), 4),
-      new MyRow(new DateTime(2019, 10, 21), 2),
-      new MyRow(new DateTime(2019, 10, 22), 5),
-      new MyRow(new DateTime(2019, 10, 23), 2),
-      new MyRow(new DateTime(2019, 10, 24), 3),
-      new MyRow(new DateTime(2019, 10, 25), 2),
+    var data = [
+      
+       new MyRow(new DateTime(2019, 10, 3), 1),
+   
     ];
+
+    for(int i =0; i< allData.length; i++ ){
+      var daylist = allData[i].split("-");
+      // print(daylist.toList()[0]);
+      // print(daylist.toList()[1]);
+      // print(daylist.toList()[2]);
+      data.add(new MyRow(new DateTime(int.parse(daylist.toList()[0]), int.parse(daylist.toList()[1]), int.parse(daylist.toList()[2])), 4));
+    
+    }
+
     return [
       new charts.Series<MyRow, DateTime>(
         id: 'headcount',
@@ -471,13 +365,7 @@ List<charts.Series<MyRow, DateTime>> _CustomAxisTickFormattersData() {
 
   DatumLegendWithMeasures(this.seriesList, {this.animate});
 
-  factory DatumLegendWithMeasures.withSampleData() {
-    return new DatumLegendWithMeasures(
-      _createSampleData(),
-      // Disable animations for image tests.
-      animate: false,
-    );
-  }
+  
 
 
   @override
@@ -524,13 +412,27 @@ class LinearSales {
   LinearSales(this.year, this.sales);
 }
 
-List<charts.Series<LinearSales, int>> _createDatumLegendWithSampleData() {
+
+List<charts.Series<LinearSales, int>> _createDatumLegendWithMeasuresData() {
+
+    int very_diss = 0; 
+    int diss = 0; 
+    int neutral = 0; 
+    int satisified = 0; 
+    int very_sati = 1 ; 
+    int sum = very_diss + diss + neutral + satisified + very_sati; 
+    double p1 = very_diss/sum; 
+    double p2 = diss / sum; 
+    double p3 = neutral / sum; 
+    double p4 = satisified / sum; 
+    double p5 = very_sati / sum; 
+
     final data = [
-      new LinearSales(1, 100),
-      new LinearSales(2, 75),
-      new LinearSales(3, 25),
-      new LinearSales(4, 5),
-      new LinearSales(5, 5),
+      new LinearSales(1, p1.toInt()),
+      new LinearSales(2, p2.toInt()),
+      new LinearSales(3, p3.toInt()),
+      new LinearSales(4, p4.toInt()),
+      new LinearSales(5, p5.toInt()),
     ];
 
     return [
@@ -543,35 +445,17 @@ List<charts.Series<LinearSales, int>> _createDatumLegendWithSampleData() {
     ];
   }
 
-  List<charts.Series<LinearSales, int>> _createDatumLegendWithMeasuresData() {
-    final data = [
-      new LinearSales(1, 30),
-      new LinearSales(2, 35),
-      new LinearSales(3, 10),
-      new LinearSales(4, 10),
-      new LinearSales(5, 15),
-    ];
-    return [
-      new charts.Series<LinearSales, int>(
-        id: 'Mood',
-        domainFn: (LinearSales sales, _) => sales.year,
-        measureFn: (LinearSales sales, _) => sales.sales,
-        data: data,
-      )
-    ];
-  }
-
-
-
-Widget NonzeroBoundMeasureAxisSection = Container(
-  child: new Padding(
-    padding: new EdgeInsets.all(0.0),
-    child: new SizedBox(
-      height: 180.0,
-      child: NonzeroBoundMeasureAxis(_CustomAxisTickFormattersData()),
-    )
-  ),
-);
+Widget NonzeroBoundMeasureAxisSection(List<String> allDates){ 
+  return new Container(
+        child: new Padding(
+       padding: new EdgeInsets.all(0.0),
+        child: new SizedBox(
+            height: 180.0,
+             child: NonzeroBoundMeasureAxis(_CustomAxisTickFormattersData(allDates)),
+           )
+        ),
+        );
+}
 
 
 class NonzeroBoundMeasureAxis extends StatelessWidget {
@@ -579,15 +463,7 @@ class NonzeroBoundMeasureAxis extends StatelessWidget {
   final bool animate;
 
   NonzeroBoundMeasureAxis(this.seriesList, {this.animate});
-
   /// Creates a [TimeSeriesChart] with sample data and no transition.
-  factory NonzeroBoundMeasureAxis.withSampleData() {
-    return new NonzeroBoundMeasureAxis(
-      _createSampleData(),
-      // Disable animations for image tests.
-      animate: false,
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -601,30 +477,6 @@ class NonzeroBoundMeasureAxis extends StatelessWidget {
   }
 
   /// Create one series with sample hard coded data.
-  static List<charts.Series<MyRow, DateTime>> _createSampleData() {
-
-    final data = [
-      new MyRow(new DateTime(2017, 9, 25), 106),
-      new MyRow(new DateTime(2017, 9, 26), 108),
-      new MyRow(new DateTime(2017, 9, 27), 106),
-      new MyRow(new DateTime(2017, 9, 28), 109),
-      new MyRow(new DateTime(2017, 9, 29), 111),
-      new MyRow(new DateTime(2017, 9, 30), 115),
-      new MyRow(new DateTime(2017, 10, 01), 125),
-      new MyRow(new DateTime(2017, 10, 02), 133),
-      new MyRow(new DateTime(2017, 10, 03), 127),
-      new MyRow(new DateTime(2017, 10, 04), 131),
-      new MyRow(new DateTime(2017, 10, 05), 123),
-    ];
-
-    return [
-      new charts.Series<MyRow, DateTime>(
-        id: 'Headcount',
-        domainFn: (MyRow row, _) => row.timeStamp,
-        measureFn: (MyRow row, _) => row.headcount,
-        data: data,
-      )
-    ];
-  }
+  /// 
 }
 
