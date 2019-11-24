@@ -19,7 +19,6 @@ class AnalysisPage extends StatelessWidget {
 
   List<EntryInstance> entryInstances;
   Widget analysisWidget() {
-       
     return FutureBuilder(
       builder: (context, fireBaseSnap) {
         if (fireBaseSnap.connectionState == ConnectionState.done) {
@@ -29,17 +28,14 @@ class AnalysisPage extends StatelessWidget {
         return Container(width: 0.0, height: 0.0);
       },
       future: fbh.getAllUserEntryInstances(userId),
-
     );
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
        body: analysisWidget(),    
       );
   }
-
 }
 
 class AnalysisWidget extends StatefulWidget{
@@ -52,7 +48,6 @@ class AnalysisWidget extends StatefulWidget{
 
   @override
   State<StatefulWidget> createState() => _AnalysisWidgetState(); 
-
 }
 
 class _AnalysisWidgetState extends State<AnalysisWidget>{
@@ -96,6 +91,7 @@ class _AnalysisWidgetState extends State<AnalysisWidget>{
               // datePickButton,
               // titleSection,
               _buildButtons(),
+             
               new Container(
               height: 190,
               child: Padding(
@@ -129,11 +125,67 @@ class _AnalysisWidgetState extends State<AnalysisWidget>{
                 ),
               ),
              ),
+                RaisedButton(
+              child: Text('Tips'),
+              color: Colors.orange,
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context){
+                    return AlertDialog(
+                      title: const Text('About the numbers'),
+                      content: new Container(
+                          height: 150.0, 
+                          child: _buildAboutText(),
+                              // new Container(child: Text("0 - Very dissatisfied")),
+                              // new Container(child: Text("1 - Dissatisfied")),
+                              // new Container(child: Text("2 - Neutral")),
+                              // new Container(child: Text("3 - Satisfied")),
+                              //  new Container(child: Text("4 - Very Satisfied")),
+
+                
+                      ),
+
+                      actions: <Widget>[
+                        new FlatButton(
+                          onPressed: (){
+                            Navigator.of(context).pop();
+                          },
+                          textColor: Theme.of(context).primaryColor,
+                          child: const Text("Okay, got it!"),
+                        )
+                      ],
+                    );
+                  }
+                );
+              },
+            ),
            ],
          ),
         // Text("Hello User: $_journaleQuery"),
     );
   }
+
+ Widget _buildAboutText() {
+    return new RichText(
+      text: new TextSpan(
+        text: '0 - Very dissatisfied\n\n',
+        style: const TextStyle(color: Colors.black87),
+        children: <TextSpan>[
+          const TextSpan(text: '1 - Dissatisfied\n\n'),
+          const TextSpan(
+            text: '2 - Neutral\n\n',
+          ),
+          new TextSpan(
+            text: '3 - Satisfied\n\n',
+          ),
+          const TextSpan(text: '4 - Very Satisfied'),
+        ],
+      ),
+    );
+  }
+
+
 
 
   Widget _buildButtons() {
@@ -167,17 +219,14 @@ class _AnalysisWidgetState extends State<AnalysisWidget>{
             ),
             RaisedButton(
               child: Text('Week'),
-           
-             
               color: days == 7 ? Colors.blue : Colors.grey,
-    
               onPressed: () {
                 setState(() {
                   days = 7; 
                   records = getRecordsNum(widget.entryInstances, days);
                 });
               },             
-            ),
+            ),                
           Icon(
             Icons.star,
             color: Colors.red[500],
@@ -285,7 +334,7 @@ List<charts.Series<OrdinalSales, String>> _createSampleData(List<EntryInstance> 
       var time2 = DateTime.parse(allData[i].toJson()["date_time"]);
       if(time2.isAfter(time1)){
         if(allData[i].toJson()["mood"]==0){
-        very_diss = very_diss + 1 ;
+          very_diss = very_diss + 1 ;
         }
         else if(allData[i].toJson()["mood"]==1){
           diss = diss + 1 ;
@@ -364,9 +413,6 @@ List<charts.Series<MyRow, DateTime>> _CustomAxisTickFormattersData(List<EntryIns
   final bool animate;
 
   DatumLegendWithMeasures(this.seriesList, {this.animate});
-
-  
-
 
   @override
   Widget build(BuildContext context) {
@@ -499,7 +545,6 @@ class NonzeroBoundMeasureAxis extends StatelessWidget {
             tickProviderSpec:
                 new charts.BasicNumericTickProviderSpec(zeroBound: false)));
   }
-
   /// Create one series with sample hard coded data.
   /// 
 }
