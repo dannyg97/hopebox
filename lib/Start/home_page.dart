@@ -7,6 +7,9 @@ import '../account/information.dart';
 import '../mood_entry.dart';
 import '../history/history.dart';
 import '../analysis/analysis.dart';
+import 'package:fancy_bottom_navigation/fancy_bottom_navigation.dart';
+import '../past_entries/past_entries.dart';
+
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.auth, this.userId, this.logoutCallback})
@@ -29,8 +32,22 @@ class _HomePageState extends State<HomePage> {
   final _textEditingController = TextEditingController();
   StreamSubscription<Event> _onTodoAddedSubscription;
   StreamSubscription<Event> _onTodoChangedSubscription;
-
+  FireBaseHelper fbh = new FireBaseHelper();
+  
   Query _todoQuery;
+
+    Widget getPastEntries() {
+    
+    return FutureBuilder(
+      builder: (context, fireBaseSnap) {
+        if (fireBaseSnap.connectionState == ConnectionState.done) {
+          return PastEntries(auth: widget.auth, userId: widget.userId, logoutCallback: widget.logoutCallback, entryInstances: fireBaseSnap.data.reversed.toList());
+        }
+          return Container(width: 0.0, height: 0.0);
+        },
+      future: fbh.getAllUserEntryInstances(widget.userId),
+    );
+  }
 
   //bool _isEmailVerified = false;
 
@@ -143,52 +160,9 @@ class _HomePageState extends State<HomePage> {
         });
   }
 
-  Widget showTodoList() {
-    if (_todoList.length > 0) {
-      return ListView.builder(
-          shrinkWrap: true,
-          itemCount: _todoList.length,
-          itemBuilder: (BuildContext context, int index) {
-            String todoId = _todoList[index].key;
-            String subject = _todoList[index].subject;
-            bool completed = _todoList[index].completed;
-            String userId = _todoList[index].userId;
-            return Dismissible(
-              key: Key(todoId),
-              background: Container(color: Colors.red),
-              onDismissed: (direction) async {
-                deleteTodo(todoId, index);
-              },
-              child: ListTile(
-                title: Text(
-                  subject,
-                  style: TextStyle(fontSize: 20.0),
-                ),
-                trailing: IconButton(
-                    icon: (completed)
-                        ? Icon(
-                            Icons.done_outline,
-                            color: Colors.green,
-                            size: 20.0,
-                          )
-                        : Icon(Icons.done, color: Colors.grey, size: 20.0),
-                    onPressed: () {
-                      updateTodo(_todoList[index]);
-                    }),
-              ),
-            );
-          });
-    } else {
-      return MoodEnter(
-        userId: widget.userId, 
-        auth: this.widget.auth,
-        logoutCallback: widget.logoutCallback
-      ); 
-    }
-  }
+  int _selectedIndex = 0;
+  static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.black);
 
-int _selectedIndex = 0;
-static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.black);
   static const List<Widget> _widgetOptions = <Widget>[
   Text(
     'Index 0: Home',
@@ -217,18 +191,11 @@ static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWei
   _getPageWidget(int pos){
     switch (pos) {
       case 0:
-        return showTodoList();
+        return getPastEntries();
       case 1:
-<<<<<<< HEAD
-        return new HistoryPage();
         return new HistoryPage(auth: widget.auth, userId: widget.userId, logoutCallback: widget.logoutCallback);
       case 2: 
         return new AnalysisPage(auth: widget.auth, userId: widget.userId, logoutCallback: widget.logoutCallback);
-=======
-        return new HistoryPage(); 
-      case 2: 
-        return new AnalysisPage(auth: widget.auth, userId: widget.userId, logoutCallback: widget.logoutCallback); 
->>>>>>> parent of 75dd0f2... Merge branch 'ui_update'
       case 3:
         return new AccountPage();
         break;

@@ -7,9 +7,13 @@ class FireBaseHelper {
     final fs.Firestore _firestore = fs.Firestore.instance;
 
     Future<List<EntryInstance>> getAllUserEntryInstances(String userId) async {
-        List<EntryInstance> entryInstances = new List();
         List<String> dates = await getAllDatesWithMoodOrJournalEntries(userId);
-
+        List<EntryInstance> entryInstances = await addEntryInstances(userId, dates);
+        return entryInstances;
+    }
+ 
+    Future<List<EntryInstance>> addEntryInstances(String userId, List<String> dates) async {
+        List<EntryInstance> entryInstances = new List();
         for (String date in dates) {
             String journalEntry = await getJournalEntry(userId, date);
             int mood = await getMood(userId, date);
