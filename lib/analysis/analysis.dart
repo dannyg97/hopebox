@@ -22,14 +22,11 @@ class AnalysisPage extends StatelessWidget {
        
     return FutureBuilder(
       builder: (context, fireBaseSnap) {
-        if (fireBaseSnap.connectionState == ConnectionState.none) {
-            return Container(width: 0.0, height: 0.0);
+        if (fireBaseSnap.connectionState == ConnectionState.done) {
+          entryInstances = fireBaseSnap.data;
+          return AnalysisWidget(auth: this.auth, userId: this.userId, logoutCallback: this.logoutCallback, entryInstances: entryInstances);
         }
-        entryInstances = fireBaseSnap.data;
-        print(entryInstances);
-        print(fireBaseSnap.data);
-        return AnalysisWidget(auth: this.auth, userId: this.userId, logoutCallback: this.logoutCallback, entryInstances: entryInstances);
-
+        return Container(width: 0.0, height: 0.0);
       },
       future: fbh.getAllUserEntryInstances(userId),
 
@@ -39,10 +36,6 @@ class AnalysisPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-       appBar: AppBar(
-          automaticallyImplyLeading: false,
-          title: const Text('Analytical Results'),
-        ),
        body: analysisWidget(),    
       );
   }
@@ -66,37 +59,25 @@ class _AnalysisWidgetState extends State<AnalysisWidget>{
   final FirebaseDatabase _database = FirebaseDatabase.instance; 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>(); 
   FireBaseHelper fbh = new FireBaseHelper();
-  Query _journaleQuery; 
-  int records = 0; 
+  int records; 
   int days = 7; 
   
   @override 
   void initState(){
     super.initState();
-    print("The userId is ");
-    print(widget.userId);
-    print("The auth is");
-    print(widget.auth);
-    print("The dates are");
-    print(widget.entryInstances[0].toJson()['date_time']);
-    print("The length is ");
-    print(widget.entryInstances.length);
-    print("The mood are");
-    print(widget.entryInstances[2].toJson()['mood']);
-    records = 0; 
-    _journaleQuery = _database.reference().child('journal_entry')
-    .orderByChild('userId').equalTo(widget.userId);
+    records = getRecordsNum(widget.entryInstances, days);
+
   }
 
-  int getRecordsNum(List<String> dates, days){
+  int getRecordsNum(List<EntryInstance> entryInstances, days){
     int records = 0; 
     DateTime now = new DateTime.now();
     var today = new DateFormat("yyyy-MM-dd").format(now);
     var pointDate =  now.subtract(new Duration(days: days));
-    for(var item in dates){
+    for(var item in entryInstances){
       //  var time1 = DateTime.parse(today) ;
       var time1 = pointDate;
-       var time2 = DateTime.parse(item);
+       var time2 = DateTime.parse(item.toJson()["date_time"]);
        if(time2.isAfter(time1)){
          records = records + 1; 
        }
@@ -121,7 +102,7 @@ class _AnalysisWidgetState extends State<AnalysisWidget>{
                 padding: EdgeInsets.all(5.0),
                 child: Column(
                   children: <Widget>[
-                    simpleDatumLegendWithMeasuresSection(widget.entryInstances),
+                    simpleDatumLegendWithMeasuresSection(widget.entryInstances, days),
                   ],
                 ),
               ),
@@ -132,7 +113,7 @@ class _AnalysisWidgetState extends State<AnalysisWidget>{
                 padding: EdgeInsets.all(3.0),
                 child: Column(
                   children: <Widget>[
-                    simpleBarSection(widget.entryInstances),
+                    simpleBarSection(widget.entryInstances, days),
                   ],
                 ),
               ),
@@ -143,7 +124,7 @@ class _AnalysisWidgetState extends State<AnalysisWidget>{
                 padding: EdgeInsets.all(5.0),
                 child: Column(
                   children: <Widget>[
-                    NonzeroBoundMeasureAxisSection(widget.entryInstances),
+                    NonzeroBoundMeasureAxisSection(widget.entryInstances, days),
                   ],
                 ),
               ),
@@ -165,26 +146,21 @@ class _AnalysisWidgetState extends State<AnalysisWidget>{
           children: <Widget>[
             RaisedButton(
               child: Text('Month'),
+              color: days == 30 ? Colors.blue : Colors.grey,
               onPressed: () {
                 setState(() {
-                  print("Month");
                   days = 30; 
-                  records = 0; 
-                       print(days);
-                  // _calendarController.setCalendarFormat(CalendarFormat.month);
+                  records = getRecordsNum(widget.entryInstances, days);
                 });
               },
             ),
             RaisedButton(
               child: Text('Fortnight'),
+              color: days == 14 ? Colors.blue : Colors.grey,
               onPressed: () {
                 setState(() {
-                  print("Fortnight");
                   days = 14;
-                  // records = getRecordsNum(widget.allDates, days); 
-                  records = 0; 
-                  print(days);
-                  // _calendarController.setCalendarFormat(CalendarFormat.twoWeeks);
+                  records = getRecordsNum(widget.entryInstances, days);
                 });
                 
               },
@@ -193,17 +169,12 @@ class _AnalysisWidgetState extends State<AnalysisWidget>{
               child: Text('Week'),
            
              
-                 color: Colors.blue,
-      
+              color: days == 7 ? Colors.blue : Colors.grey,
+    
               onPressed: () {
                 setState(() {
-                  print("Week");
                   days = 7; 
-                  // records = getRecordsNum(widget.allDates, days); 
-                  records = 0; 
-                  
-                  print(days);
-                  // _calendarController.setCalendarFormat(CalendarFormat.week);
+                  records = getRecordsNum(widget.entryInstances, days);
                 });
               },             
             ),
@@ -222,24 +193,24 @@ class _AnalysisWidgetState extends State<AnalysisWidget>{
 }
 
 //SimpleBarSection 
-Widget simpleBarSection(List<EntryInstance> allDate){
+Widget simpleBarSection(List<EntryInstance> entryInstances, int days){
   return new Container(
   child: new Padding(
     padding: new EdgeInsets.all(2.0),
     child: new SizedBox(
       height: 180.0,
-      child: SimpleBarChart(_createSampleData(allDate)),
+      child: SimpleBarChart(_createSampleData(entryInstances, days)),
     )
   ),
   );
 }
 
-Widget simpleDatumLegendWithMeasuresSection(List<EntryInstance> allDate){return new Container(
+Widget simpleDatumLegendWithMeasuresSection(List<EntryInstance> entryInstances, int days){return new Container(
   child: new Padding(
     padding: new EdgeInsets.all(0.0),
     child: new SizedBox(
       height: 180,
-      child: DatumLegendWithMeasures(_createDatumLegendWithMeasuresData()),
+      child: DatumLegendWithMeasures(_createDatumLegendWithMeasuresData(entryInstances, days)),
     ),
     ),
   );
@@ -298,31 +269,35 @@ class OrdinalSales {
   OrdinalSales(this.year, this.sales);
 }
 
-List<charts.Series<OrdinalSales, String>> _createSampleData(List<EntryInstance> allDates) {
-
-
+List<charts.Series<OrdinalSales, String>> _createSampleData(List<EntryInstance> allData, int days) {
     int very_diss = 0; 
     int diss = 0; 
     int neutral = 0; 
     int satisified = 0; 
     int very_sati = 0 ; 
 
-    // for(int i; i<allDates.length; i++){
-      // if(allData[i].toJson()["mood"]){
-      // }
-      // if(allDates[i].toJson()["mood"]==1){
-      //   very_diss = very_diss + 1 ;
-      // }
-      // else if(allDates[i].toJson()["mood"]==2){
-      //   diss = diss + 1 ;
-      // }else if(allDates[i].toJson()["mood"]==3){
-      //   neutral = neutral + 1 ;
-      // }else if(allDates[i].toJson()["mood"]==4){
-      //     satisified = satisified +1; 
-      // }else if(allDates[i].toJson()["mood"]==5){
-      //     very_sati = very_sati + 1; 
-      // }
-    // }
+    DateTime now = new DateTime.now();
+    var today = new DateFormat("yyyy-MM-dd").format(now);
+    var pointDate =  now.subtract(new Duration(days: days));
+    for(int i= 0; i<allData.length; i++){
+      //  var time1 = DateTime.parse(today) ;
+      var time1 = pointDate;
+      var time2 = DateTime.parse(allData[i].toJson()["date_time"]);
+      if(time2.isAfter(time1)){
+        if(allData[i].toJson()["mood"]==0){
+        very_diss = very_diss + 1 ;
+        }
+        else if(allData[i].toJson()["mood"]==1){
+          diss = diss + 1 ;
+        }else if(allData[i].toJson()["mood"]==2){
+          neutral = neutral + 1 ;
+        }else if(allData[i].toJson()["mood"]==3){
+            satisified = satisified +1; 
+        }else if(allData[i].toJson()["mood"]==4){
+            very_sati = very_sati + 1; 
+        }
+      }
+    }
     final data = [
       //TODO 
       //Replace the following data to the real data 
@@ -354,20 +329,23 @@ class MyRow {
 
 
 //PASS ALL DATA with mood
-List<charts.Series<MyRow, DateTime>> _CustomAxisTickFormattersData(List<EntryInstance> allData) {
+List<charts.Series<MyRow, DateTime>> _CustomAxisTickFormattersData(List<EntryInstance> allData, int days) {
     // TODO 
     // Replace the data to the real data 
-    var data = [
-       new MyRow(new DateTime(2019, 10, 3), 1),
-    ];
-    for(int i =0; i< allData.length; i++ ){
-      var daylist = allData[i].toJson()["date_time"].split("-");
-      var mood = allData[i].toJson()["mood"];
-      // print(daylist.toList()[0]);
-      // print(daylist.toList()[1]);
-      // print(daylist.toList()[2]);
-      data.add(new MyRow(new DateTime(int.parse(daylist.toList()[0]), int.parse(daylist.toList()[1]), int.parse(daylist.toList()[2])), mood));
-    
+    var data = new List<MyRow>();
+
+    DateTime now = new DateTime.now();
+    var today = new DateFormat("yyyy-MM-dd").format(now);
+    var pointDate =  now.subtract(new Duration(days: days));
+    for(int i= 0; i<allData.length; i++){
+      //  var time1 = DateTime.parse(today) ;
+      var time1 = pointDate;
+      var time2 = DateTime.parse(allData[i].toJson()["date_time"]);
+      if(time2.isAfter(time1)){
+        var daylist = allData[i].toJson()["date_time"].split("-");
+        var mood = allData[i].toJson()["mood"];
+        data.add(new MyRow(new DateTime(int.parse(daylist.toList()[0]), int.parse(daylist.toList()[1]), int.parse(daylist.toList()[2])), mood));
+      }
     }
 
     return [
@@ -435,13 +413,37 @@ class LinearSales {
 }
 
 
-List<charts.Series<LinearSales, int>> _createDatumLegendWithMeasuresData() {
+List<charts.Series<LinearSales, int>> _createDatumLegendWithMeasuresData(List<EntryInstance> entryInstances, int days) {
 
     int very_diss = 0; 
     int diss = 0; 
     int neutral = 0; 
     int satisified = 0; 
-    int very_sati = 1 ; 
+    int very_sati = 0; 
+
+    DateTime now = new DateTime.now();
+    var today = new DateFormat("yyyy-MM-dd").format(now);
+    var pointDate =  now.subtract(new Duration(days: days));
+    for(int i= 0; i<entryInstances.length; i++){
+      //  var time1 = DateTime.parse(today) ;
+      var time1 = pointDate;
+      var time2 = DateTime.parse(entryInstances[i].toJson()["date_time"]);
+      if(time2.isAfter(time1)){
+        if(entryInstances[i].toJson()["mood"]==0){
+        very_diss = very_diss + 1 ;
+        }
+        else if(entryInstances[i].toJson()["mood"]==1){
+          diss = diss + 1 ;
+        }else if(entryInstances[i].toJson()["mood"]==2){
+          neutral = neutral + 1 ;
+        }else if(entryInstances[i].toJson()["mood"]==3){
+            satisified = satisified +1; 
+        }else if(entryInstances[i].toJson()["mood"]==4){
+            very_sati = very_sati + 1; 
+        }
+      }
+    }
+
     int sum = very_diss + diss + neutral + satisified + very_sati; 
     double p1 = very_diss/sum; 
     double p2 = diss / sum; 
@@ -450,11 +452,11 @@ List<charts.Series<LinearSales, int>> _createDatumLegendWithMeasuresData() {
     double p5 = very_sati / sum; 
 
     final data = [
-      new LinearSales(1, p1.toInt()),
-      new LinearSales(2, p2.toInt()),
-      new LinearSales(3, p3.toInt()),
-      new LinearSales(4, p4.toInt()),
-      new LinearSales(5, p5.toInt()),
+      new LinearSales(0, (p1*100).toInt()),
+      new LinearSales(1, (p2*100).toInt()),
+      new LinearSales(2, (p3*100).toInt()),
+      new LinearSales(3, (p4*100).toInt()),
+      new LinearSales(4, (p5*100).toInt()),
     ];
 
     return [
@@ -467,13 +469,13 @@ List<charts.Series<LinearSales, int>> _createDatumLegendWithMeasuresData() {
     ];
   }
 
-Widget NonzeroBoundMeasureAxisSection(List<EntryInstance> allData){ 
+Widget NonzeroBoundMeasureAxisSection(List<EntryInstance> allData, int days){ 
   return new Container(
         child: new Padding(
        padding: new EdgeInsets.all(0.0),
         child: new SizedBox(
             height: 180.0,
-             child: NonzeroBoundMeasureAxis(_CustomAxisTickFormattersData(allData)),
+             child: NonzeroBoundMeasureAxis(_CustomAxisTickFormattersData(allData, days)),
            )
         ),
         );
