@@ -2,6 +2,11 @@
   <img src="hopebox.png">
 </p>
 
+<p align="center">
+  <img src="Hopebox 1.gif">
+  <img src="Hopebox 2.gif">
+</p>
+
 ### What is hopebox? 
 Hopebox is a cross-platform iOS/Android app that focuses on the tracking and improvement of mental health. Hopebox provides a(n):
 - Mood entry
